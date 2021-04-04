@@ -7,6 +7,7 @@ Created on Sun Apr  4 13:30:22 2021
 
 import serial
 import itertools
+import sys
 
 def cmd(ser, cmd):
     # if cmd[-1] != '\n':
@@ -15,11 +16,12 @@ def cmd(ser, cmd):
     ser.write(cmd)
     ser.flush()
     result = ser.read()
-    print(cmd, result, cmd == result)
+    assert (cmd == result), 'cmd and result need to match'
+    # print(cmd, result, cmd == result)
     # print(cmd[:-1])
 
 knightrider = ['a', 'b', 'c', 'd']
-# knightrider.extend(reversed(knightrider[1:-1]))
+knightrider.extend(reversed(knightrider[1:-1]))
 knightrider = itertools.cycle(knightrider)
 
 with serial.Serial() as ser:
@@ -27,15 +29,12 @@ with serial.Serial() as ser:
     ser.port = 'COM4'
     ser.timeout = None
     ser.open()
-    # ser.flush()
-    print(ser.read())
-    # cmd(ser, 'a')
-    # cmd(ser, 'b')
-    # cmd(ser, 'a')
-    # cmd(ser, 'b')
-    # cmd(ser, 'c')
-    # cmd(ser, 'd')
+    if not ser.read() == b'A':
+        print('incorrect handshake')
+        sys.exit()
+    else:
+        print('ready to go')
 
     for c in knightrider:
-        cmd(ser, c)
-        # print('>>', ser.read())
+        for _ in range(10):
+            cmd(ser, c)

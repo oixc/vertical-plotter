@@ -46,7 +46,7 @@ void blink_all() {
 
 void blink(int pin) { 
   digitalWrite(pin, HIGH);    
-  delay(200);                 
+  delay(50);                 
   digitalWrite(pin, LOW);     
 }
   
