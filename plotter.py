@@ -65,12 +65,13 @@ class Plotter(simulation.Simulation):
         return step_sequence
     
     def sequence_to(self, x, y, draw_line=False):
-        if draw_line:
+        step_sequence = []
+        if draw_line and (not self._pen_down):
             step_sequence = [command_dict['PD']] 
-        else:
+        if (not draw_line) and self._pen_down:
             step_sequence = [command_dict['PU']] 
         step_sequence.extend(self.find_step_squence(x, y))
-        step_sequence.append(command_dict['PU'])
+        # step_sequence.append(command_dict['PU'])
         
         self.send_commands(step_sequence)
         return step_sequence
