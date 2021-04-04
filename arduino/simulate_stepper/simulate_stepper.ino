@@ -7,6 +7,8 @@
 #define DIRECTION_LEFT 0
 #define DIRECTION_RIGHT 1
 
+#define BAUDRATE 9600
+
 int pins[2][2] = {
   {8, 9}, // left
   {11, 12}  // right
@@ -14,7 +16,7 @@ int pins[2][2] = {
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
-  Serial.begin(9600);
+  Serial.begin(BAUDRATE);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
