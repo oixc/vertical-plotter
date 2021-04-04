@@ -8,6 +8,7 @@ Created on Sun Apr  4 16:16:44 2021
 import arduino_serial
 import simulation
 import numpy as np
+from util import command_dict
 
 class Plotter(simulation.Simulation):
     def __init__(self):
@@ -62,6 +63,23 @@ class Plotter(simulation.Simulation):
             number_of_steps[anchor] -= 1
 
         return step_sequence
+    
+    def sequence_to(self, x, y, draw_line=False):
+        if draw_line:
+            step_sequence = [command_dict['PD']] 
+        else:
+            step_sequence = [command_dict['PU']] 
+        step_sequence.extend(self.find_step_squence(x, y))
+        step_sequence.append(command_dict['PU'])
+        
+        self.send_commands(step_sequence)
+        return step_sequence
+    
+    def line_to(self, x, y):
+        return self.sequence_to(x, y, draw_line=True)
+    
+    def move_to(self, x, y):
+        return self.sequence_to(x, y, draw_line=False)
     
     
 if __name__ == '__main__':    
