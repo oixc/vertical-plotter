@@ -7,7 +7,7 @@ Created on Sun Apr  4 21:20:39 2021
 
 from svgpathtools import svg2paths
 
-filename = 'calibration'
+filename = 'test_pattern'
 paths, attributes = svg2paths(f'svg/{filename}.svg')
 
 with open(f'svg/{filename}.path', 'w') as f:

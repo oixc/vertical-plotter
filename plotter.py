@@ -129,7 +129,7 @@ if __name__ == '__main__':
     # all_commands.extend(p.line_to(150, 100))
     # all_commands.extend(p.line_to(299, 100))
     
-    filename = 'calibration'
+    filename = 'test_pattern'
     with open(f'svg/{filename}.path', 'r') as f:
         path = f.read()
         
@@ -138,8 +138,8 @@ if __name__ == '__main__':
         
     path = iter(path.split())
     for action in path:
-        x = float(next(path)) * 0.8
-        y = float(next(path)) * 0.8
+        x = float(next(path)) * 0.4
+        y = float(next(path)) * 0.4
         
         xs.append(x)
         ys.append(y)
