@@ -24,7 +24,7 @@ class Plotter(simulation.Simulation):
             
         return line_length
     
-    def find_step_squence(self, x, y):
+    def find_step_squence(self, x, y, fast=False):
         target_line_length = np.array(self.find_line_length(x, y))
         current_line_lenght = np.array(self.line_length)
         delta_line_lenght = target_line_length - current_line_lenght
@@ -42,7 +42,7 @@ class Plotter(simulation.Simulation):
         
         step_sequence = []
         
-        orthogonal_grid = False
+        if fast:
             # orthogonal grid: inspired by https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
             directions = []
             number_of_steps = []
@@ -102,7 +102,7 @@ class Plotter(simulation.Simulation):
             step_sequence = [command_dict['PD']] 
         if (not draw_line) and self._pen_down:
             step_sequence = [command_dict['PU']] 
-        step_sequence.extend(self.find_step_squence(x, y))
+        step_sequence.extend(self.find_step_squence(x, y, fast=not draw_line))
         # step_sequence.append(command_dict['PU'])
         
         self.send_commands(step_sequence)
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
         
-        sim.step_unit = p.step_unit = 1 # 0.1
+        sim.step_unit = p.step_unit = 1  # 0.1
         # x, y = 150, 100
         # x, y = p.pen_position
         # x = 10
