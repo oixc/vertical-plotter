@@ -76,7 +76,7 @@ class Plotter(simulation.Simulation):
             current_point = np.array(self.pen_position)
             target_point = np.array([x, y])
             delta_point = target_point - current_point
-            delta_max_steps = int(abs(np.ceil(np.sum(delta_point / self.step_unit))))
+            delta_max_steps = int(10 + abs(np.ceil(np.sum(delta_point / self.step_unit))))
             
             prev_steps = np.array([-1, -1])
             delta_steps = np.array([0, 0])
