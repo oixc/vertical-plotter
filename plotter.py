@@ -142,8 +142,8 @@ if __name__ == '__main__':
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
         
-        p.translate = [250, 100]
-        p.scale = [0.7, 0.7]
+        p.translate = [0, 0]
+        p.scale = [1, 1]
         
         sim.step_unit = p.step_unit = 1  # 0.1
         # x, y = 150, 100
@@ -155,7 +155,7 @@ if __name__ == '__main__':
             
         # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
         
-        intermediate_steps = 1
+        # intermediate_steps = 1
         
         all_commands = []
         ## rectanlge(100, 100, 100, 100)
@@ -173,7 +173,13 @@ if __name__ == '__main__':
         # all_commands.extend(p.line_to(150, 100))
         # all_commands.extend(p.line_to(299, 100))
         
-        filename = 'calibration'
+        # filename = 'calibration'
+        # p.translate = [250, 100]
+        # p.scale = [0.7, 0.7]
+        
+        filename = 'test_pattern'
+        p.translate = [100, 200]
+        p.scale = [0.4, 0.4]
         with open(f'svg/{filename}.path', 'r') as f:
             path = f.read()
             
@@ -205,4 +211,4 @@ if __name__ == '__main__':
     print(len(all_commands))
     send_commands(all_commands)
 
-    sim.draw_svg()
+    sim.draw_svg(draw_move_lines=False)
