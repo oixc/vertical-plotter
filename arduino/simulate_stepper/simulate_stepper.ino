@@ -45,7 +45,7 @@ void blink_all() {
 
 void blink(int pin) { 
   digitalWrite(pin, HIGH);    
-  delay(500);                 
+  delay(200);                 
   digitalWrite(pin, LOW);     
 }
   
@@ -88,7 +88,7 @@ void loop() {
 
   while (Serial.available() > 0) {
     //c = Serial.read();
-    blink_all();
+    //blink_all();
     s = Serial.readStringUntil('\n');
     s.toLowerCase();
     Serial.println(s);
