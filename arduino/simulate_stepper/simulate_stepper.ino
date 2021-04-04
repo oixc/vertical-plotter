@@ -14,6 +14,8 @@ int pins[2][2] = {
   {11, 12}  // right
 };
 
+int penPin = 4;
+
 void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(BAUDRATE);
@@ -25,6 +27,9 @@ void setup() {
   pinMode(pins[MOTOR_LEFT][DIRECTION_RIGHT], OUTPUT);
   pinMode(pins[MOTOR_RIGHT][DIRECTION_LEFT], OUTPUT);
   pinMode(pins[MOTOR_RIGHT][DIRECTION_RIGHT], OUTPUT);
+
+  pinMode(penPin, OUTPUT);
+  penUp();
 
   // Serial.println("Ready");
   Serial.write('A');
@@ -71,6 +76,18 @@ void rotate(int motor, int dir) {
 //  Serial.println(); 
 }
 
+void penDown() {         
+  delay(500);        
+  digitalWrite(penPin, HIGH);              
+  delay(500);
+}
+
+void penUp() {         
+  delay(500);        
+  digitalWrite(penPin, LOW);              
+  delay(500);
+}
+
 char c;
 // String s;
 
@@ -115,6 +132,8 @@ void loop() {
       case 'b': rotate(MOTOR_LEFT, DIRECTION_RIGHT); break;
       case 'c': rotate(MOTOR_RIGHT, DIRECTION_LEFT); break;
       case 'd': rotate(MOTOR_RIGHT, DIRECTION_RIGHT); break;
+      case 'e': penUp(); break;
+      case 'f': penDown(); break;
     }
     Serial.write(c);
     Serial.flush();
