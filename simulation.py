@@ -101,7 +101,7 @@ class Simulation():
     def pen_position(self):
         return find_pen_position(self.line_length[0], self.line_length[1], self.anchor_width)
     
-    def draw_svg(self, filename='./plotter_simulation.svg'):
+    def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True):
         if self._pen_down:
             # finish virtual drawing
             self.pen_up()  
@@ -123,10 +123,11 @@ class Simulation():
             for start, end in zip(line[:-1], line[1:]):
                 lines.add(dwg.line(start=start, end=end))   
                 
-        move_lines = dwg.add(dwg.g(id='move_lines', fill='white', stroke='green', stroke_width=0.5))
-        for line in self.move_lines:
-            for start, end in zip(line[:-1], line[1:]):
-                move_lines.add(dwg.line(start=start, end=end))   
+        if draw_move_lines:
+            move_lines = dwg.add(dwg.g(id='move_lines', fill='white', stroke='green', stroke_width=0.5))
+            for line in self.move_lines:
+                for start, end in zip(line[:-1], line[1:]):
+                    move_lines.add(dwg.line(start=start, end=end))   
     
         dwg.save()
         
