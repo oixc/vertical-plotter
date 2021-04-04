@@ -6,12 +6,18 @@ Created on Sun Apr  4 13:30:22 2021
 """
 
 import serial
+import itertools
 
 def cmd(ser, cmd):
     if cmd[-1] != '\n':
         cmd += '\n'
     ser.write(cmd.encode())
     ser.flush()
+    print(cmd[:-1])
+
+knightrider = ['LL', 'LR', 'RL', 'RR', 'rr']
+# knightrider.extend(reversed(knightrider[1:-1]))
+# knightrider = itertools.cycle(knightrider)
 
 with serial.Serial() as ser:
     ser.baudrate = 9600
@@ -19,8 +25,7 @@ with serial.Serial() as ser:
     ser.timeout = None
     ser.open()
     print(ser.readline())
-    
-    cmd(ser, 'LL')
-    cmd(ser, 'LR')
-    cmd(ser, 'RR')
-    cmd(ser, 'RL')
+    cmd(ser, 'lr')
+
+    # for c in knightrider:
+    #     cmd(ser, c)

@@ -50,6 +50,7 @@ void blink(int pin) {
 }
   
 void rotate(int motor, int dir) { 
+  blink(pins[motor][dir]);
   switch (motor) {
     case MOTOR_LEFT:
       Serial.print('L');
@@ -66,8 +67,7 @@ void rotate(int motor, int dir) {
       Serial.print('r');
       break;
   }
-  Serial.println();
-  blink(pins[motor][dir]); 
+  Serial.println(); 
 }
 
 char c;
@@ -86,12 +86,11 @@ void loop() {
 //  rotate(MOTOR_RIGHT, DIRECTION_RIGHT);    
 //  delay(1000);     
 
-  while (Serial.available() > 0) {
-    //c = Serial.read();
-    //blink_all();
-    s = Serial.readStringUntil('\n');
+  if (Serial.available() > 0) {
+    blink_all();
+    s = Serial.readString();
+    s.trim();
     s.toLowerCase();
-    Serial.println(s);
     if (s == "ll") {
       rotate(MOTOR_LEFT, DIRECTION_LEFT);
     }
@@ -104,6 +103,8 @@ void loop() {
     if (s == "rr") {
       rotate(MOTOR_RIGHT, DIRECTION_RIGHT);
     }
+    //delayMicroseconds(300); 
+    Serial.print(s);
     Serial.flush();
   }
 }
