@@ -29,6 +29,7 @@ class Simulation():
         self.anchor_points = [(0, 0), (300, 0)]
         self._pen_down = False
         self.lines = []
+        self.move_lines = []
         self.current_line = []
         
     def guesstimate_anchor_points(self):
@@ -78,18 +79,18 @@ class Simulation():
         assert anchor in [0, 1]
         assert direction in [-1, 1]
         self.line_length[anchor] += direction * self.step_unit
-        if self._pen_down:
-            self.current_line.append(self.pen_position)
+        self.current_line.append(self.pen_position)
 
     def pen_up(self):
         if self._pen_down:
             self._pen_down = False
             self.lines.append(self.current_line)
-            self.current_line = []
+            self.current_line = [self.pen_position]
         
     def pen_down(self):
         if not self._pen_down:
             self._pen_down = True
+            self.move_lines.append(self.current_line)
             self.current_line = [self.pen_position]
 
     @property
@@ -109,19 +110,23 @@ class Simulation():
         dwg = svgwrite.Drawing(filename=filename,
                                viewBox=('-10 -10 {} {}'.format(self.anchor_width * 2.5, self.anchor_width * 1.1)))
         
-        anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=0.4))
+        anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=1))
         for center in self.anchor_points:
             anchors.add(dwg.circle(center=center, r=5))
             
-        anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=0.5))
+        anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=1))
         anchor_lines.add(dwg.line(start=self.anchor_points[0], end=self.pen_position))
         anchor_lines.add(dwg.line(start=self.anchor_points[1], end=self.pen_position))
             
-
-        lines = dwg.add(dwg.g(id='lines', fill='white', stroke='black', stroke_width=0.4))
+        lines = dwg.add(dwg.g(id='lines', fill='white', stroke='black', stroke_width=1))
         for line in self.lines:
             for start, end in zip(line[:-1], line[1:]):
-                lines.add(dwg.line(start=start, end=end))        
+                lines.add(dwg.line(start=start, end=end))   
+                
+        move_lines = dwg.add(dwg.g(id='move_lines', fill='white', stroke='green', stroke_width=0.5))
+        for line in self.move_lines:
+            for start, end in zip(line[:-1], line[1:]):
+                move_lines.add(dwg.line(start=start, end=end))   
     
         dwg.save()
         
