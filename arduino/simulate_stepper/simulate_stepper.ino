@@ -27,6 +27,20 @@ void setup() {
   pinMode(pins[MOTOR_RIGHT][DIRECTION_RIGHT], OUTPUT);
 
   Serial.println("Ready");  
+  // Serial.flush();
+}
+
+void blink_all() { 
+  digitalWrite(pins[MOTOR_LEFT][DIRECTION_LEFT], HIGH);    
+  digitalWrite(pins[MOTOR_LEFT][DIRECTION_RIGHT], HIGH);   
+  digitalWrite(pins[MOTOR_RIGHT][DIRECTION_LEFT], HIGH);    
+  digitalWrite(pins[MOTOR_RIGHT][DIRECTION_RIGHT], HIGH);   
+  delay(200);                 
+  digitalWrite(pins[MOTOR_LEFT][DIRECTION_LEFT], LOW);    
+  digitalWrite(pins[MOTOR_LEFT][DIRECTION_RIGHT], LOW);   
+  digitalWrite(pins[MOTOR_RIGHT][DIRECTION_LEFT], LOW);    
+  digitalWrite(pins[MOTOR_RIGHT][DIRECTION_RIGHT], LOW);   
+  delay(200);                 
 }
 
 void blink(int pin) { 
@@ -74,9 +88,10 @@ void loop() {
 
   while (Serial.available() > 0) {
     //c = Serial.read();
+    blink_all();
     s = Serial.readStringUntil('\n');
     s.toLowerCase();
-    //Serial.println(s);
+    Serial.println(s);
     if (s == "ll") {
       rotate(MOTOR_LEFT, DIRECTION_LEFT);
     }
