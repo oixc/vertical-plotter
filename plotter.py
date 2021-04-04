@@ -13,6 +13,13 @@ from util import command_dict
 class Plotter(simulation.Simulation):
     def __init__(self):
         super().__init__()
+        self.translate = [0, 0]
+        self.scale = [1, 1]
+        
+    def offset(self, x, y):
+        x = self.translate[0] + x * self.scale[0]
+        y = self.translate[1] + y * self.scale[1]
+        return x, y
         
     def find_line_length(self, x, y):
         # pythagoras to the rescue: a**2 + b**2 = c**2
@@ -97,6 +104,7 @@ class Plotter(simulation.Simulation):
         return step_sequence
     
     def sequence_to(self, x, y, draw_line=False):
+        x, y = self.offset(x, y)
         step_sequence = []
         if draw_line and (not self._pen_down):
             step_sequence = [command_dict['PD']] 
@@ -133,6 +141,9 @@ if __name__ == '__main__':
         sim.guesstimate_line_lenth()
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
+        
+        p.translate = [250, 100]
+        p.scale = [0.7, 0.7]
         
         sim.step_unit = p.step_unit = 1  # 0.1
         # x, y = 150, 100
@@ -171,8 +182,8 @@ if __name__ == '__main__':
             
         path = iter(path.split())
         for action in path:
-            x = float(next(path)) * 0.8
-            y = float(next(path)) * 0.8
+            x = float(next(path))
+            y = float(next(path))
             
             xs.append(x)
             ys.append(y)
@@ -185,8 +196,10 @@ if __name__ == '__main__':
                 raise NotImplementedError()
     
     else:
+        # p.translate = [0, 0]
+        # p.scale = [1/2, 1/2]
         all_commands = []
-        all_commands.extend(p.line_to(200, 200))
+        all_commands.extend(p.move_to(200, 200))
         all_commands.extend(p.line_to(20, 200))
       
     print(len(all_commands))
