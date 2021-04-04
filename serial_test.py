@@ -17,21 +17,26 @@ def cmd(ser, cmd):
     assert (cmd == result), 'cmd and result need to match'
     # print(cmd, result, cmd == result)
 
-knightrider = ['a', 'b', 'c', 'd']
-knightrider.extend(reversed(knightrider[1:-1]))
-knightrider = itertools.cycle(knightrider)
-
-with serial.Serial() as ser:
-    ser.baudrate = 9600
-    ser.port = 'COM4'
-    ser.timeout = None
-    ser.open()
-    if not ser.read() == b'A':
-        print('incorrect handshake')
-        sys.exit()
-    else:
-        print('ready to go')
-
-    for c in knightrider:
-        for _ in range(10):
+def send_commands(commands):
+    with serial.Serial() as ser:
+        ser.baudrate = 9600
+        ser.port = 'COM4'
+        ser.timeout = None
+        ser.open()
+        if not ser.read() == b'A':
+            print('incorrect handshake')
+            sys.exit()
+        else:
+            print('ready to go')
+    
+        for c in commands:
             cmd(ser, c)
+                                
+if __name__ == '__main__':
+    knightrider = ['a', 'b', 'c', 'd']
+    knightrider.extend(reversed(knightrider[1:-1]))
+    knightrider = itertools.cycle(knightrider)
+    
+    send_commands(['b'] * 10)
+    send_commands(['c'] * 50)
+    send_commands(knightrider)
