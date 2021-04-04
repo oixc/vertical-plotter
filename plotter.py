@@ -104,4 +104,16 @@ if __name__ == '__main__':
         
     # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
     
+    intermediate_steps = 10
+    
+    send_commands(p.move_to(100, 100))
+    for i in range(intermediate_steps):
+        send_commands(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
+    for i in range(intermediate_steps):
+        send_commands(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
+    for i in range(intermediate_steps):
+        send_commands(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
+    for i in range(intermediate_steps):
+        send_commands(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
+    
     sim.draw_svg()
