@@ -10,15 +10,12 @@ import itertools
 import sys
 
 def cmd(ser, cmd):
-    # if cmd[-1] != '\n':
-    #     cmd += '\n'
     cmd = cmd.encode()
     ser.write(cmd)
     ser.flush()
     result = ser.read()
     assert (cmd == result), 'cmd and result need to match'
     # print(cmd, result, cmd == result)
-    # print(cmd[:-1])
 
 knightrider = ['a', 'b', 'c', 'd']
 knightrider.extend(reversed(knightrider[1:-1]))
