@@ -29,19 +29,18 @@ class Plotter(simulation.Simulation):
         delta_line_lenght = target_line_length - current_line_lenght
         line_steps = delta_line_lenght / self.step_unit
         
-        if any(abs(line_steps) <= 0.1):
-            raise NotImplementedError('only one motor needs to turn')
+        if any(abs(line_steps) < 0.5):
+            step_sequence = []
+            for anchor in [0, 1]:
+                direction = np.sign(line_steps[anchor])
+                number_of_steps = int(abs(np.round(line_steps[anchor], 0)))
+                step_sequence.extend(number_of_steps * [self._step_command(anchor, direction)])
             
+            return step_sequence
+
         steps_ratio = line_steps[0] / line_steps[1]
         
-        step_sequence = []
-        for anchor in [0, 1]:
-            direction = np.sign(line_steps[anchor])
-            number_of_steps = int(abs(np.round(line_steps[anchor], 0)))
-            step_sequence.extend(number_of_steps * [self._step_command(anchor, direction)])
         
-        return step_sequence
-
 
 if __name__ == '__main__':    
     send_commands = arduino_serial.send_commands
