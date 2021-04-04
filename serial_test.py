@@ -9,23 +9,33 @@ import serial
 import itertools
 
 def cmd(ser, cmd):
-    if cmd[-1] != '\n':
-        cmd += '\n'
-    ser.write(cmd.encode())
+    # if cmd[-1] != '\n':
+    #     cmd += '\n'
+    cmd = cmd.encode()
+    ser.write(cmd)
     ser.flush()
-    print(cmd[:-1])
+    result = ser.read()
+    print(cmd, result, cmd == result)
+    # print(cmd[:-1])
 
-knightrider = ['LL', 'LR', 'RL', 'RR', 'rr']
+knightrider = ['a', 'b', 'c', 'd']
 # knightrider.extend(reversed(knightrider[1:-1]))
-# knightrider = itertools.cycle(knightrider)
+knightrider = itertools.cycle(knightrider)
 
 with serial.Serial() as ser:
     ser.baudrate = 9600
     ser.port = 'COM4'
     ser.timeout = None
     ser.open()
-    print(ser.readline())
-    cmd(ser, 'lr')
+    # ser.flush()
+    print(ser.read())
+    # cmd(ser, 'a')
+    # cmd(ser, 'b')
+    # cmd(ser, 'a')
+    # cmd(ser, 'b')
+    # cmd(ser, 'c')
+    # cmd(ser, 'd')
 
-    # for c in knightrider:
-    #     cmd(ser, c)
+    for c in knightrider:
+        cmd(ser, c)
+        # print('>>', ser.read())

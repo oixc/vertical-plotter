@@ -26,8 +26,9 @@ void setup() {
   pinMode(pins[MOTOR_RIGHT][DIRECTION_LEFT], OUTPUT);
   pinMode(pins[MOTOR_RIGHT][DIRECTION_RIGHT], OUTPUT);
 
-  Serial.println("Ready");  
-  // Serial.flush();
+  // Serial.println("Ready");
+  Serial.write('A');
+  Serial.flush();
 }
 
 void blink_all() { 
@@ -51,27 +52,27 @@ void blink(int pin) {
   
 void rotate(int motor, int dir) { 
   blink(pins[motor][dir]);
-  switch (motor) {
-    case MOTOR_LEFT:
-      Serial.print('L');
-      break;
-    case MOTOR_RIGHT:
-      Serial.print('R');
-      break;
-  }
-  switch (dir) {
-    case DIRECTION_LEFT:
-      Serial.print('l');
-      break;
-    case DIRECTION_RIGHT:
-      Serial.print('r');
-      break;
-  }
-  Serial.println(); 
+//  switch (motor) {
+//    case MOTOR_LEFT:
+//      Serial.print('L');
+//      break;
+//    case MOTOR_RIGHT:
+//      Serial.print('R');
+//      break;
+//  }
+//  switch (dir) {
+//    case DIRECTION_LEFT:
+//      Serial.print('l');
+//      break;
+//    case DIRECTION_RIGHT:
+//      Serial.print('r');
+//      break;
+//  }
+//  Serial.println(); 
 }
 
 char c;
-String s;
+// String s;
 
 void loop() {
 //  blink(pins[MOTOR_LEFT][DIRECTION_LEFT]);
@@ -87,24 +88,35 @@ void loop() {
 //  delay(1000);     
 
   if (Serial.available() > 0) {
-    blink_all();
-    s = Serial.readString();
-    s.trim();
-    s.toLowerCase();
-    if (s == "ll") {
-      rotate(MOTOR_LEFT, DIRECTION_LEFT);
+//    blink_all();
+//    s = Serial.readString();
+//    s.trim();
+//    s.toLowerCase();
+//    if (s == "ll") {
+//      rotate(MOTOR_LEFT, DIRECTION_LEFT);
+//    }
+//    if (s == "lr") {
+//      rotate(MOTOR_LEFT, DIRECTION_RIGHT);
+//    }
+//    if (s == "rl") {
+//      rotate(MOTOR_RIGHT, DIRECTION_LEFT);
+//    }
+//    if (s == "rr") {
+//      rotate(MOTOR_RIGHT, DIRECTION_RIGHT);
+//    }
+//    //delayMicroseconds(300); 
+//    Serial.print(s);
+//    Serial.flush();
+
+//    blink_all();
+    c = Serial.read();
+    switch (c) {
+      case 'a': rotate(MOTOR_LEFT, DIRECTION_LEFT); break;
+      case 'b': rotate(MOTOR_LEFT, DIRECTION_RIGHT); break;
+      case 'c': rotate(MOTOR_RIGHT, DIRECTION_LEFT); break;
+      case 'd': rotate(MOTOR_RIGHT, DIRECTION_RIGHT); break;
     }
-    if (s == "lr") {
-      rotate(MOTOR_LEFT, DIRECTION_RIGHT);
-    }
-    if (s == "rl") {
-      rotate(MOTOR_RIGHT, DIRECTION_LEFT);
-    }
-    if (s == "rr") {
-      rotate(MOTOR_RIGHT, DIRECTION_RIGHT);
-    }
-    //delayMicroseconds(300); 
-    Serial.print(s);
+    Serial.write(c);
     Serial.flush();
   }
 }
