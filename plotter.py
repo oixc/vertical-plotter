@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
     p = Plotter()
     
-    sim.step_unit = p.step_unit = 5 # 0.1
+    sim.step_unit = p.step_unit = 1 # 0.1
     # x, y = 150, 100
     # x, y = p.pen_position
     # x = 10
@@ -105,18 +105,23 @@ if __name__ == '__main__':
         
     # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
     
-    intermediate_steps = 10
+    intermediate_steps = 1
     
     all_commands = []
-    all_commands.extend(p.move_to(100, 100))
-    for i in range(intermediate_steps):
-        all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
-    for i in range(intermediate_steps):
-        all_commands.extend(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
-    for i in range(intermediate_steps):
-        all_commands.extend(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
-    for i in range(intermediate_steps):
-        all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
+    ## rectanlge(100, 100, 100, 100)
+    # all_commands.extend(p.move_to(100, 100))
+    # for i in range(intermediate_steps):
+    #     all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
+    # for i in range(intermediate_steps):
+    #     all_commands.extend(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
+    # for i in range(intermediate_steps):
+    #     all_commands.extend(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
+    # for i in range(intermediate_steps):
+    #     all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
+    
+    all_commands.extend(p.line_to(1, 100))
+    all_commands.extend(p.line_to(150, 100))
+    all_commands.extend(p.line_to(299, 100))
     
     print(len(all_commands))
     send_commands(all_commands)
