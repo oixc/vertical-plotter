@@ -101,18 +101,18 @@ class Simulation():
             self.pen_down()
         
         dwg = svgwrite.Drawing(filename=filename,
-                               viewBox=('-100 -100 {} {}'.format(1000, self.anchor_width)))
+                               viewBox=('-10 -10 {} {}'.format(self.anchor_width * 2.5, self.anchor_width * 1.1)))
         
-        anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=0.2))
+        anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=0.4))
         for center in self.anchor_points:
             anchors.add(dwg.circle(center=center, r=5))
             
-        anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=0.3))
+        anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=0.5))
         anchor_lines.add(dwg.line(start=self.anchor_points[0], end=self.pen_position))
         anchor_lines.add(dwg.line(start=self.anchor_points[1], end=self.pen_position))
             
 
-        lines = dwg.add(dwg.g(id='lines', fill='white', stroke='black', stroke_width=0.2))
+        lines = dwg.add(dwg.g(id='lines', fill='white', stroke='black', stroke_width=0.4))
         for line in self.lines:
             for start, end in zip(line[:-1], line[1:]):
                 lines.add(dwg.line(start=start, end=end))        
