@@ -107,14 +107,18 @@ if __name__ == '__main__':
     
     intermediate_steps = 10
     
-    send_commands(p.move_to(100, 100))
+    all_commands = []
+    all_commands.extend(p.move_to(100, 100))
     for i in range(intermediate_steps):
-        send_commands(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
+        all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
     for i in range(intermediate_steps):
-        send_commands(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
+        all_commands.extend(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
     for i in range(intermediate_steps):
-        send_commands(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
+        all_commands.extend(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
     for i in range(intermediate_steps):
-        send_commands(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
+        all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
+    
+    print(len(all_commands))
+    send_commands(all_commands)
     
     sim.draw_svg()
