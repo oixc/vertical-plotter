@@ -54,6 +54,20 @@ class Simulation():
         for command in commands:
             self.apply_command(command)
 
+    def _step_command(self, anchor=0, direction=1):
+        assert anchor in [0, 1]
+        assert direction in [-1, 1]
+        if anchor == 0:
+            if direction == -1:
+                return 'a'
+            else:
+                return 'b'
+        else:
+            if direction == -1:
+                return 'd'
+            else:
+                return 'c'
+
     def _step(self, anchor=0, direction=1):
         assert anchor in [0, 1]
         assert direction in [-1, 1]
