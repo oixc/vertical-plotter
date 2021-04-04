@@ -43,8 +43,7 @@ class Plotter(simulation.Simulation):
         step_sequence = []
         
         orthogonal_grid = False
-        if orthogonal_grid:
-            # inspired by https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+            # orthogonal grid: inspired by https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
             directions = []
             number_of_steps = []
             for anchor in [0, 1]:
@@ -65,50 +64,35 @@ class Plotter(simulation.Simulation):
                 number_of_steps[anchor] -= 1
 
         else:
+            # polar grid
+            np_anchor = np.array(self.anchor_points)
             current_point = np.array(self.pen_position)
             target_point = np.array([x, y])
             delta_point = target_point - current_point
             delta_max_steps = int(abs(np.ceil(np.sum(delta_point / self.step_unit))))
             
-            left_anchor = np.array(self.anchor_points[0])
-            right_anchor = np.array(self.anchor_points[1])
-            
-            prev_left_steps = -1
-            prev_right_steps = -1
-            left_delta = 0
-            right_delta = 0
-            
+            prev_steps = np.array([-1, -1])
+            delta_steps = np.array([0, 0])
+            dist = np.array([0, 0])
             for i in np.linspace(0, 1, delta_max_steps):
                 temp_point = current_point + i * delta_point
-                left = np.linalg.norm(temp_point - left_anchor)
-                right = np.linalg.norm(temp_point - right_anchor)
+                for anchor in [0, 1]:
+                    dist[anchor] = np.linalg.norm(temp_point - np_anchor[anchor])
                 
-                left_steps = np.round(left / self.step_unit, 0)
-                right_steps = np.round(right / self.step_unit, 0)
+                # the closest polar grid point to temp_point is determined by rounding
+                steps = np.round(dist / self.step_unit, 0)
                 
-                if prev_left_steps > -1:
-                    left_delta = left_steps - prev_left_steps
-                    right_delta = right_steps - prev_right_steps
-                
-                if abs(left_delta) > 0:
-                    # assert abs(left_delta) < 2
-                    anchor = 0
-                    direction = np.sign(left_delta)
-                    for _ in range(int(abs(left_delta))):
-                        step_sequence.append(self._step_command(anchor, direction))
+                if prev_steps[0] > -1:
+                    delta_steps = steps - prev_steps
                     
-                if abs(right_delta) > 0:
-                    # assert abs(right_delta) < 2
-                    anchor = 1
-                    direction = np.sign(right_delta)
-                    for _ in range(int(abs(right_delta))):
-                        step_sequence.append(self._step_command(anchor, direction))
-                
-                # if abs(right_delta) + abs(left_delta) > 0:    
-                #     print(temp_point, left_steps, right_steps, left_delta, right_delta)
-                
-                prev_left_steps = left_steps
-                prev_right_steps = right_steps
+                # if step numbers changed for the closest point we need a command
+                if any(abs(delta_steps)) > 0:
+                    for anchor in [0, 1]:
+                        direction = np.sign(delta_steps[anchor])
+                        for _ in range(int(abs(delta_steps[anchor]))):
+                            step_sequence.append(self._step_command(anchor, direction))
+                    
+                prev_steps = steps
                 
         return step_sequence
     
