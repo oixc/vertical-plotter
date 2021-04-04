@@ -93,12 +93,14 @@ if __name__ == '__main__':
     #     arduino_serial.send_commands(commands)
 
     p = Plotter()
-    x, y = 150, 100
-    x, y = p.pen_position
-    x = 10
-    x, y = 200, 100
-    step_sequence = p.find_step_squence(x, y)
-    send_commands(['f'] + step_sequence + ['e']) 
+    
+    sim.step_unit = p.step_unit = 5 # 0.1
+    # x, y = 150, 100
+    # x, y = p.pen_position
+    # x = 10
+    # x, y = 200, 100
+    # step_sequence = p.find_step_squence(x, y)
+    # send_commands(['f'] + step_sequence + ['e']) 
         
     # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
     
