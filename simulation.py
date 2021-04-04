@@ -30,7 +30,13 @@ class Simulation():
         self._pen_down = False
         self.lines = []
         self.current_line = []
+        
+    def guesstimate_anchor_points(self):
+        self.anchor_points = [(0, 0), (0.8 * sum(self.line_length), 0)]        
 
+    def guesstimate_line_lenth(self):
+        self.line_length = [self.anchor_width * 0.55] * 2
+        
     def apply__readable_command(self, command):
         self.apply_command(command_dict[command])
 
