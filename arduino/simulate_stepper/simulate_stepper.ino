@@ -24,7 +24,7 @@ void setup() {
   pinMode(pins[MOTOR_RIGHT][DIRECTION_LEFT], OUTPUT);
   pinMode(pins[MOTOR_RIGHT][DIRECTION_RIGHT], OUTPUT);
 
-  Serial.println('A');  // send READY
+  Serial.println("Ready");  
 }
 
 void blink(int pin) { 
@@ -44,14 +44,18 @@ void rotate(int motor, int dir) {
   }
   switch (dir) {
     case DIRECTION_LEFT:
-      Serial.println('l');
+      Serial.print('l');
       break;
     case DIRECTION_RIGHT:
-      Serial.println('r');
+      Serial.print('r');
       break;
   }
+  Serial.println();
   blink(pins[motor][dir]); 
 }
+
+char c;
+String s;
 
 void loop() {
 //  blink(pins[MOTOR_LEFT][DIRECTION_LEFT]);
@@ -59,10 +63,30 @@ void loop() {
 //  blink(pins[MOTOR_RIGHT][DIRECTION_LEFT]);
 //  blink(pins[MOTOR_RIGHT][DIRECTION_RIGHT]);
 //  delay(2000);                       
- 
-  rotate(MOTOR_LEFT, DIRECTION_LEFT);
-  rotate(MOTOR_LEFT, DIRECTION_RIGHT);    
-  rotate(MOTOR_RIGHT, DIRECTION_LEFT);
-  rotate(MOTOR_RIGHT, DIRECTION_RIGHT);    
-  delay(1000);     
+
+//  rotate(MOTOR_LEFT, DIRECTION_LEFT);
+//  rotate(MOTOR_LEFT, DIRECTION_RIGHT);    
+//  rotate(MOTOR_RIGHT, DIRECTION_LEFT);
+//  rotate(MOTOR_RIGHT, DIRECTION_RIGHT);    
+//  delay(1000);     
+
+  while (Serial.available() > 0) {
+    //c = Serial.read();
+    s = Serial.readStringUntil('\n');
+    s.toLowerCase();
+    //Serial.println(s);
+    if (s == "ll") {
+      rotate(MOTOR_LEFT, DIRECTION_LEFT);
+    }
+    if (s == "lr") {
+      rotate(MOTOR_LEFT, DIRECTION_RIGHT);
+    }
+    if (s == "rl") {
+      rotate(MOTOR_RIGHT, DIRECTION_LEFT);
+    }
+    if (s == "rr") {
+      rotate(MOTOR_RIGHT, DIRECTION_RIGHT);
+    }
+    Serial.flush();
+  }
 }
