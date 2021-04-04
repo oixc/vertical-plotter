@@ -102,11 +102,12 @@ class Simulation():
         return find_pen_position(self.line_length[0], self.line_length[1], self.anchor_width)
     
     def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True):
+        # finish virtual drawing
         if self._pen_down:
-            # finish virtual drawing
             self.pen_up()  
-            self.pen_down()
-        
+        self.pen_down()
+        self.pen_up()  
+            
         dwg = svgwrite.Drawing(filename=filename,
                                viewBox=('-10 -10 {} {}'.format(self.anchor_width * 2.5, self.anchor_width * 1.1)))
         
