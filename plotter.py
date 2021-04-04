@@ -95,6 +95,12 @@ if __name__ == '__main__':
 
     p = Plotter()
     
+    sim.anchor_points[0] = (0, 0)
+    sim.anchor_points[1] = (1750, 0)
+    sim.guesstimate_line_lenth()
+    p.anchor_points = sim.anchor_points.copy()
+    p.line_length = sim.line_length.copy()
+    
     sim.step_unit = p.step_unit = 1 # 0.1
     # x, y = 150, 100
     # x, y = p.pen_position
@@ -119,10 +125,37 @@ if __name__ == '__main__':
     # for i in range(intermediate_steps):
     #     all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
     
-    all_commands.extend(p.line_to(1, 100))
-    all_commands.extend(p.line_to(150, 100))
-    all_commands.extend(p.line_to(299, 100))
+    # all_commands.extend(p.line_to(1, 100))
+    # all_commands.extend(p.line_to(150, 100))
+    # all_commands.extend(p.line_to(299, 100))
     
+    filename = 'calibration'
+    with open(f'svg/{filename}.path', 'r') as f:
+        path = f.read()
+        
+    xs = []
+    ys = []
+        
+    path = iter(path.split())
+    for action in path:
+        x = float(next(path)) * 0.8
+        y = float(next(path)) * 0.8
+        
+        xs.append(x)
+        ys.append(y)
+        
+        if action == 'M':
+            all_commands.extend(p.move_to(x, y))
+        elif action == 'L':
+            all_commands.extend(p.line_to(x, y))
+        else:
+            raise NotImplementedError()
+    
+    # all_commands = []
+    # # all_commands.extend(p.line_to(220, 350))
+    # all_commands.extend(p.move_to(min(xs), min(ys)))
+    # all_commands.extend(p.line_to(max(xs), max(ys)))
+        
     print(len(all_commands))
     send_commands(all_commands)
     
