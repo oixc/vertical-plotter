@@ -8,7 +8,7 @@
 #define DIRECTION_RIGHT 1
 
 int pins[2][2] = {
-  {9, 8}, // left
+  {8, 9}, // left
   {11, 12}  // right
 };
 
