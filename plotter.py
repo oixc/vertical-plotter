@@ -140,13 +140,15 @@ if __name__ == '__main__':
 
     p = Plotter()
     
+    calibrate = False
     if True:
         sim.anchor_points[0] = (0, 0)
-        sim.anchor_points[1] = (1750, 0)
+        sim.anchor_points[1] = (1000, 0)
         sim.guesstimate_line_lenth()
         sim.find_home()
         sim.set_home()
-        sim.max_line_length = sim.anchor_width * 1
+        sim.find_lower_tension_border(min_tension_threshold=1/3)
+        sim.max_line_length = sim.anchor_width * 1.2
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
         p.max_line_length = sim.max_line_length
@@ -157,10 +159,10 @@ if __name__ == '__main__':
         p.scale = [1, 1]
         
         pulley_diameter = 10
-        full_rotation_steps = 200
+        full_rotation_steps = 200 * 1
         sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
         
-        sim.step_unit = p.step_unit = 1  # 0.1
+        # sim.step_unit = p.step_unit = 1  # 0.1
         
         # x, y = 150, 100
         # x, y = p.pen_position
@@ -193,37 +195,41 @@ if __name__ == '__main__':
         # all_commands.extend(p.line_to(150, 100))
         # all_commands.extend(p.line_to(299, 100))
         
-        if True:
-            filename = 'calibration'
-            p.translate = [250, 100]
-            p.scale = [0.7, 0.7]
+        filename = 'calibration'
+        p.translate = [238, 180]
+        p.scale = [0.3, 0.3]
+        sim.step_unit = p.step_unit = 1  # 0.1
+        
+        # filename = 'test_pattern'
+        # p.translate = [100, 200]
+        # p.scale = [0.4, 0.4]
+        
+        # filename = 'penguin'
+        # p.translate = [391, 30]
+        # p.scale = [2.5, 2.5]
+        
+        # p.find_home()
+        # p.set_home()
+        with open(f'svg/{filename}.path', 'r') as f:
+            path = f.read()
             
-            # filename = 'test_pattern'
-            # p.translate = [100, 200]
-            # p.scale = [0.4, 0.4]
+        xs = []
+        ys = []
             
-            # p.find_home()
-            # p.set_home()
-            with open(f'svg/{filename}.path', 'r') as f:
-                path = f.read()
-                
-            xs = []
-            ys = []
-                
-            path = iter(path.split())
-            for action in path:
-                x = float(next(path))
-                y = float(next(path))
-                
-                xs.append(x)
-                ys.append(y)
-                
-                if action == 'M':
-                    all_commands.extend(p.move_to(x, y))
-                elif action == 'L':
-                    all_commands.extend(p.line_to(x, y))
-                else:
-                    raise NotImplementedError()
+        path = iter(path.split())
+        for action in path:
+            x = float(next(path))
+            y = float(next(path))
+            
+            xs.append(x)
+            ys.append(y)
+            
+            if action == 'M':
+                all_commands.extend(p.move_to(x, y))
+            elif action == 'L':
+                all_commands.extend(p.line_to(x, y))
+            else:
+                raise NotImplementedError()
                     
         current_width = max(xs) - min(xs)
         target_width = p.anchor_width * 0.5
@@ -247,6 +253,34 @@ if __name__ == '__main__':
         # all_commands.extend(p.move_to(p.anchor_width / 2, 200))
         # all_commands.extend([command_dict['RL']] * 500)
         
+    elif calibrate:
+        sim.anchor_points[0] = (0, 0)
+        sim.anchor_points[1] = (1000, 0)
+        sim.guesstimate_line_lenth()
+        sim.find_home()
+        sim.set_home()        
+        sim.find_lower_tension_border()
+        sim.max_line_length = sim.anchor_width * 1.2
+        p.anchor_points = sim.anchor_points.copy()
+        p.line_length = sim.line_length.copy()
+        p.max_line_length = sim.max_line_length
+        p.find_home()
+        p.set_home()
+        
+        p.translate = [0, 0]
+        p.scale = [1, 1]
+        
+        pulley_diameter = 10
+        full_rotation_steps = 200 * 1
+        sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
+        
+        all_commands = []
+        all_commands.extend(p.rel_line_to(0, 200))
+        all_commands.extend(p.rel_move_to(-100, -100))
+        all_commands.extend(p.rel_line_to(200, 0))
+        all_commands.append(command_dict['PU'])
+        all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
+      
     else:
         # p.translate = [20, 0]
         # p.scale = [1/2, 1/2]
