@@ -242,6 +242,7 @@ if __name__ == '__main__':
         
         current_top = min(ys) * x_scale
         target_top = (p.home[1] + p.upper_tension_border) / 2
+        target_top = p.home[1]
         y_translate = target_top - current_top        
         
         print('translate', x_translate, y_translate)
