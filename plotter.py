@@ -138,12 +138,18 @@ if __name__ == '__main__':
         sim.set_home()
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
-        p.home = sim.home
+        p.find_home()
+        p.set_home()
         
         p.translate = [0, 0]
         p.scale = [1, 1]
         
+        pulley_diameter = 10
+        full_rotation_steps = 200
+        sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
+        
         sim.step_unit = p.step_unit = 1  # 0.1
+        
         # x, y = 150, 100
         # x, y = p.pen_position
         # x = 10

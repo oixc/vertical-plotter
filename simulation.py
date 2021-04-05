@@ -36,6 +36,7 @@ class Simulation():
         self.move_lines = []
         self.current_line = []
         self.home = (self.anchor_width / 2, self.anchor_width / 2)
+        self.upper_tension_border = None
         self.find_home()
         self.set_home()
         
@@ -127,18 +128,23 @@ class Simulation():
         return t1, t2
     
     def find_home(self):
+        self.upper_tension_border = None
         x = self.anchor_width / 2
         y = 1
         tension_absolute_delta = 1000
         best_tension_absolute_delta = 1000        
         for y in range(1, self.anchor_width ):
             tension_absolute_delta = sum(abs(np.array(self.tension((x, y))) - 1))
+            if (tension_absolute_delta < 3) and (not self.upper_tension_border):
+                self.upper_tension_border = y
             if tension_absolute_delta < best_tension_absolute_delta:
                 best_tension_absolute_delta = tension_absolute_delta
                 self.home = (x, y)
             else:
                 # once tension increases again it will never go down and we can stop
                 break
+            
+            # print(y, tension_absolute_delta)
     
     def set_home(self):
         self.line_length = self.find_line_length(*self.home)
@@ -171,7 +177,10 @@ class Simulation():
             for line in self.move_lines:
                 for start, end in zip(line[:-1], line[1:]):
                     move_lines.add(dwg.line(start=start, end=end))   
-    
+                    
+        upper_tension_border = dwg.add(dwg.g(id='upper_tension_border', fill='white', stroke='blue', stroke_width=1))
+        upper_tension_border.add(dwg.line(start=(0, self.upper_tension_border), end=(self.anchor_width, self.upper_tension_border)))   
+                
         dwg.save()
         
 if __name__ == '__main__':
