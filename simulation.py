@@ -42,6 +42,8 @@ class Simulation():
         self.upper_tension_border = None
         self.find_home()
         self.set_home()
+        self.lower_tension_border = [[(0, 0), (0, 0), (0, 0)], [(0, 0), (0, 0), (0, 0)]]
+        self.find_lower_tension_border()
         
     def guesstimate_anchor_points(self):
         self.anchor_points = [(0, 0), (0.8 * sum(self.line_length), 0)]        
@@ -151,6 +153,25 @@ class Simulation():
     
     def set_home(self):
         self.line_length = self.find_line_length(*self.home)
+        
+    def find_lower_tension_border(self, min_tension_threshold=0.5):
+        self.lower_tension_border = [[], []]
+        
+        start_x = self.anchor_width / 2
+        start_y = self.upper_tension_border / 2
+        
+        # for ratio in [1/128, 1/64, 1/32, 1/16, 1/8, 1/4, 1/2, 1, 2, 4, 8, 16, 32, 64]:
+        for ratio in [1/32, 1/16, 1/8, 1/4, 1/2, 1, 2, 4, 8, 16]:
+            for dy in range(self.max_line_length * 10):
+                dx = ratio * dy
+                x = start_x + dx
+                y = start_y + dy
+                if min(self.tension((x, y))) < min_tension_threshold:         
+                    break
+                
+            self.lower_tension_border[0].append((x, y))            
+            self.lower_tension_border[1].append((start_x - dx, y))   
+            
     
     def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True):
         # finish virtual drawing
