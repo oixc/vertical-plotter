@@ -157,7 +157,7 @@ class Simulation():
         self.pen_up()  
             
         dwg = svgwrite.Drawing(filename=filename,
-                               viewBox=('-10 -10 {} {}'.format(self.anchor_width * 2.5, self.anchor_width * 1.1)))
+                               viewBox=('-10 -10 {} {}'.format(self.anchor_width * 1.1, self.anchor_width * 2.2)))
         
         anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=1))
         for center in self.anchor_points:
