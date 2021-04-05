@@ -28,10 +28,13 @@ def line_tensions(angle1, angle2):
 
 class Simulation():
     def __init__(self):
+        # anchor lines
         self.line_length = [200, 200]
+        self.max_line_length = 400
         self.step_unit = 1
         self.anchor_points = [(0, 0), (300, 0)]
         self._pen_down = False
+        # drawing lines
         self.lines = []
         self.move_lines = []
         self.current_line = []
@@ -157,8 +160,12 @@ class Simulation():
         self.pen_up()  
             
         dwg = svgwrite.Drawing(filename=filename,
-                               viewBox=('-10 -10 {} {}'.format(self.anchor_width * 1.1, self.anchor_width * 2.2)))
+                               viewBox=('{} {} {} {}'.format(-self.anchor_width * 0.05, -self.max_line_length * 0.05, self.anchor_width * 1.05, self.max_line_length * 1.05)))
         
+        max_line_length = dwg.add(dwg.g(id='max_line_length', fill='none', stroke='orange', stroke_dasharray='5,5', stroke_width=1))
+        for center in self.anchor_points:
+            max_line_length.add(dwg.circle(center=center, r=self.max_line_length))
+            
         anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=1))
         for center in self.anchor_points:
             anchors.add(dwg.circle(center=center, r=5))
@@ -180,7 +187,7 @@ class Simulation():
                     
         upper_tension_border = dwg.add(dwg.g(id='upper_tension_border', fill='white', stroke='blue', stroke_width=1))
         upper_tension_border.add(dwg.line(start=(0, self.upper_tension_border), end=(self.anchor_width, self.upper_tension_border)))   
-                
+        
         dwg.save()
         
 if __name__ == '__main__':

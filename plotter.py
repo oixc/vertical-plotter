@@ -146,8 +146,10 @@ if __name__ == '__main__':
         sim.guesstimate_line_lenth()
         sim.find_home()
         sim.set_home()
+        sim.max_line_length = sim.anchor_width * 1
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
+        p.max_line_length = sim.max_line_length
         p.find_home()
         p.set_home()
         
