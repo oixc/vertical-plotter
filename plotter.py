@@ -114,7 +114,17 @@ class Plotter(simulation.Simulation):
     def line_to(self, x, y):
         return self.sequence_to(x, y, draw_line=True)
     
+    def rel_line_to(self, dx, dy):
+        x = self.pen_position[0] + dx
+        y = self.pen_position[1] + dy
+        return self.sequence_to(x, y, draw_line=True)
+    
     def move_to(self, x, y):
+        return self.sequence_to(x, y, draw_line=False)
+
+    def rel_move_to(self, dx, dy):
+        x = self.pen_position[0] + dx
+        y = self.pen_position[1] + dy
         return self.sequence_to(x, y, draw_line=False)
     
     
