@@ -20,7 +20,11 @@ def find_pen_position(s1, s2, width):
     # s1^2 = y^2 + x^2
     x = np.sqrt(abs((s1 ** 2) - (y ** 2)))
     return x, y
-    
+
+def line_tensions(angle1, angle2):
+    d = np.cos(angle1) * np.sin(angle2) + np.sin(angle1) * np.cos(angle2)
+    return np.cos(angle2) / d, np.cos(angle1) / d
+   
 
 class Simulation():
     def __init__(self):
@@ -31,6 +35,9 @@ class Simulation():
         self.lines = []
         self.move_lines = []
         self.current_line = []
+        self.home = (self.anchor_width / 2, self.anchor_width / 2)
+        self.find_home()
+        self.set_home()
         
     def guesstimate_anchor_points(self):
         self.anchor_points = [(0, 0), (0.8 * sum(self.line_length), 0)]        
@@ -100,6 +107,41 @@ class Simulation():
     @property        
     def pen_position(self):
         return find_pen_position(self.line_length[0], self.line_length[1], self.anchor_width)
+    
+    def find_line_length(self, x, y):
+        # pythagoras to the rescue: a**2 + b**2 = c**2
+        line_length = []
+        for anchor in [0, 1]:
+            a = x - self.anchor_points[anchor][0]
+            b = y - self.anchor_points[anchor][1]
+            line_length.append(np.sqrt(a**2 + b**2))
+            
+        return line_length
+    
+    def tension(self, p):
+        # find angles
+        angle1 = np.arctan2(p[1] - self.anchor_points[0][1], p[0] - self.anchor_points[0][0])
+        angle2 = np.arctan2(p[1] - self.anchor_points[1][1], self.anchor_points[1][0] - p[0])
+        # tension calculation
+        t1, t2 = line_tensions(angle1, angle2)
+        return t1, t2
+    
+    def find_home(self):
+        x = self.anchor_width / 2
+        y = 1
+        tension_absolute_delta = 1000
+        best_tension_absolute_delta = 1000        
+        for y in range(1, self.anchor_width ):
+            tension_absolute_delta = sum(abs(np.array(self.tension((x, y))) - 1))
+            if tension_absolute_delta < best_tension_absolute_delta:
+                best_tension_absolute_delta = tension_absolute_delta
+                self.home = (x, y)
+            else:
+                # once tension increases again it will never go down and we can stop
+                break
+    
+    def set_home(self):
+        self.line_length = self.find_line_length(*self.home)
     
     def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True):
         # finish virtual drawing

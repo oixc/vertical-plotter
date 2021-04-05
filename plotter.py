@@ -20,16 +20,11 @@ class Plotter(simulation.Simulation):
         x = self.translate[0] + x * self.scale[0]
         y = self.translate[1] + y * self.scale[1]
         return x, y
-        
-    def find_line_length(self, x, y):
-        # pythagoras to the rescue: a**2 + b**2 = c**2
-        line_length = []
-        for anchor in [0, 1]:
-            a = x - self.anchor_points[anchor][0]
-            b = y - self.anchor_points[anchor][1]
-            line_length.append(np.sqrt(a**2 + b**2))
-            
-        return line_length
+    
+    def reverse_offset(self, x, y):
+        x = (x - self.translate[0]) / self.scale[0]
+        y = (y - self.translate[1]) / self.scale[1] 
+        return x, y
     
     def find_step_squence(self, x, y, fast=False):
         target_line_length = np.array(self.find_line_length(x, y))
@@ -49,7 +44,7 @@ class Plotter(simulation.Simulation):
         
         step_sequence = []
         
-        if fast:
+        if fast or False:
             # orthogonal grid: inspired by https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
             directions = []
             number_of_steps = []
@@ -139,8 +134,11 @@ if __name__ == '__main__':
         sim.anchor_points[0] = (0, 0)
         sim.anchor_points[1] = (1750, 0)
         sim.guesstimate_line_lenth()
+        sim.find_home()
+        sim.set_home()
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
+        p.home = sim.home
         
         p.translate = [0, 0]
         p.scale = [1, 1]
@@ -155,10 +153,14 @@ if __name__ == '__main__':
             
         # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
         
-        # intermediate_steps = 1
-        
         all_commands = []
+        
         ## rectanlge(100, 100, 100, 100)
+        # p.translate = [300, 400]
+        # p.scale = [4, 4]
+        
+        # intermediate_steps = 10
+        
         # all_commands.extend(p.move_to(100, 100))
         # for i in range(intermediate_steps):
         #     all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
@@ -173,42 +175,53 @@ if __name__ == '__main__':
         # all_commands.extend(p.line_to(150, 100))
         # all_commands.extend(p.line_to(299, 100))
         
-        # filename = 'calibration'
-        # p.translate = [250, 100]
-        # p.scale = [0.7, 0.7]
+        if True:
+            filename = 'calibration'
+            p.translate = [250, 100]
+            p.scale = [0.7, 0.7]
+            
+            # filename = 'test_pattern'
+            # p.translate = [100, 200]
+            # p.scale = [0.4, 0.4]
+            
+            # p.find_home()
+            # p.set_home()
+            with open(f'svg/{filename}.path', 'r') as f:
+                path = f.read()
+                
+            xs = []
+            ys = []
+                
+            path = iter(path.split())
+            for action in path:
+                x = float(next(path))
+                y = float(next(path))
+                
+                xs.append(x)
+                ys.append(y)
+                
+                if action == 'M':
+                    all_commands.extend(p.move_to(x, y))
+                elif action == 'L':
+                    all_commands.extend(p.line_to(x, y))
+                else:
+                    raise NotImplementedError()
+                    
+        # return home
+        all_commands.append(command_dict['PU'])
+        all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
+        # all_commands.extend(p.move_to(p.anchor_width / 2, 200))
+        # all_commands.extend([command_dict['RL']] * 500)
         
-        filename = 'test_pattern'
-        p.translate = [100, 200]
-        p.scale = [0.4, 0.4]
-        with open(f'svg/{filename}.path', 'r') as f:
-            path = f.read()
-            
-        xs = []
-        ys = []
-            
-        path = iter(path.split())
-        for action in path:
-            x = float(next(path))
-            y = float(next(path))
-            
-            xs.append(x)
-            ys.append(y)
-            
-            if action == 'M':
-                all_commands.extend(p.move_to(x, y))
-            elif action == 'L':
-                all_commands.extend(p.line_to(x, y))
-            else:
-                raise NotImplementedError()
-    
     else:
-        # p.translate = [0, 0]
+        # p.translate = [20, 0]
         # p.scale = [1/2, 1/2]
         all_commands = []
         all_commands.extend(p.move_to(200, 200))
         all_commands.extend(p.line_to(20, 200))
+        all_commands.extend(p.move_to(*p.home))
       
     print(len(all_commands))
     send_commands(all_commands)
 
-    sim.draw_svg(draw_move_lines=False)
+    sim.draw_svg(draw_move_lines=True)
