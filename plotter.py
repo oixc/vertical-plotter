@@ -225,6 +225,22 @@ if __name__ == '__main__':
                 else:
                     raise NotImplementedError()
                     
+        current_width = max(xs) - min(xs)
+        target_width = p.anchor_width * 0.5
+        x_scale = target_width / current_width            
+        x_scale = p.scale[0] 
+        
+        current_center = (max(xs) + min(xs)) / 2 * x_scale
+        target_center = p.anchor_width / 2 
+        x_translate = target_center - current_center            
+        
+        current_top = min(ys) * x_scale
+        target_top = (p.home[1] + p.upper_tension_border) / 2
+        y_translate = target_top - current_top        
+        
+        print('translate', x_translate, y_translate)
+        print('scale', x_scale, x_scale)
+        
         # return home
         all_commands.append(command_dict['PU'])
         all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
