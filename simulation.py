@@ -173,7 +173,7 @@ class Simulation():
             self.lower_tension_border[1].append((start_x - dx, y))   
             
     
-    def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True):
+    def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True, draw_tension_lines=True, draw_anchor_lines=True):
         # finish virtual drawing
         if self._pen_down:
             self.pen_up()  
@@ -181,19 +181,30 @@ class Simulation():
         self.pen_up()  
             
         dwg = svgwrite.Drawing(filename=filename,
-                               viewBox=('{} {} {} {}'.format(-self.anchor_width * 0.05, -self.max_line_length * 0.05, self.anchor_width * 1.05, self.max_line_length * 1.05)))
-        
-        max_line_length = dwg.add(dwg.g(id='max_line_length', fill='none', stroke='orange', stroke_dasharray='5,5', stroke_width=1))
-        for center in self.anchor_points:
-            max_line_length.add(dwg.circle(center=center, r=self.max_line_length))
-            
+                               viewBox=('{} {} {} {}'.format(-self.anchor_width * 0.05,
+                                                             -self.max_line_length * 0.05, 
+                                                             self.anchor_width * 1.05, 
+                                                             self.max_line_length * 1.05)))
+
         anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=1))
         for center in self.anchor_points:
             anchors.add(dwg.circle(center=center, r=5))
-            
-        anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=1))
-        anchor_lines.add(dwg.line(start=self.anchor_points[0], end=self.pen_position))
-        anchor_lines.add(dwg.line(start=self.anchor_points[1], end=self.pen_position))
+        
+        if draw_tension_lines:
+            tension_border = dwg.add(dwg.g(id='tension_border', fill='white', stroke_dasharray='5,5', stroke='blue', stroke_width=1))
+            tension_border.add(dwg.line(start=(0, self.upper_tension_border), end=(self.anchor_width, self.upper_tension_border)))   
+            for anchor in [0, 1]:
+                for index in range(len(self.lower_tension_border[anchor]) - 1):    
+                    tension_border.add(dwg.line(start=self.lower_tension_border[anchor][index], end=self.lower_tension_border[anchor][index + 1]))
+
+        if draw_anchor_lines:
+            max_line_length = dwg.add(dwg.g(id='max_line_length', fill='none', stroke='orange', stroke_dasharray='5,5', stroke_width=1))
+            for center in self.anchor_points:
+                max_line_length.add(dwg.circle(center=center, r=self.max_line_length))
+                    
+            anchor_lines = dwg.add(dwg.g(id='anchor_lines', fill='white', stroke='red', stroke_width=1))
+            anchor_lines.add(dwg.line(start=self.anchor_points[0], end=self.pen_position))
+            anchor_lines.add(dwg.line(start=self.anchor_points[1], end=self.pen_position))
             
         lines = dwg.add(dwg.g(id='lines', fill='white', stroke='black', stroke_width=1))
         for line in self.lines:
@@ -206,9 +217,6 @@ class Simulation():
                 for start, end in zip(line[:-1], line[1:]):
                     move_lines.add(dwg.line(start=start, end=end))   
                     
-        upper_tension_border = dwg.add(dwg.g(id='upper_tension_border', fill='white', stroke='blue', stroke_width=1))
-        upper_tension_border.add(dwg.line(start=(0, self.upper_tension_border), end=(self.anchor_width, self.upper_tension_border)))   
-        
         dwg.save()
         
 if __name__ == '__main__':
