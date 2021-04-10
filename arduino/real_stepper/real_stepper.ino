@@ -7,11 +7,15 @@
 #define DIRECTION_LEFT 0
 #define DIRECTION_RIGHT 1
 
+#define DIRECTION_PIN 0
+#define STEP_PIN 1
+
+
 #define BAUDRATE 9600
 
-int pins[2][2] = {
-  {8, 9}, // left
-  {11, 12}  // right
+int pins[2][2] = { // direction, step
+  {6, 3}, // left
+  {5, 2}  // right
 };
 
 int penPin = 4;
@@ -23,10 +27,10 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   
-  pinMode(pins[MOTOR_LEFT][DIRECTION_LEFT], OUTPUT);
-  pinMode(pins[MOTOR_LEFT][DIRECTION_RIGHT], OUTPUT);
-  pinMode(pins[MOTOR_RIGHT][DIRECTION_LEFT], OUTPUT);
-  pinMode(pins[MOTOR_RIGHT][DIRECTION_RIGHT], OUTPUT);
+  pinMode(pins[MOTOR_LEFT][DIRECTION_PIN], OUTPUT);
+  pinMode(pins[MOTOR_LEFT][STEP_PIN], OUTPUT);
+  pinMode(pins[MOTOR_RIGHT][DIRECTION_PIN], OUTPUT);
+  pinMode(pins[MOTOR_RIGHT][STEP_PIN], OUTPUT);
 
   pinMode(penPin, OUTPUT);
   penUp();
