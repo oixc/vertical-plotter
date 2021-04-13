@@ -249,6 +249,9 @@ if __name__ == '__main__':
             else:
                 raise NotImplementedError()
                     
+        print('top left canvas: ', p.offset(min(xs), min(ys)))
+        print('bottom right canvas: ', p.offset(max(xs), max(ys)))
+                
         current_width = max(xs) - min(xs)
         target_width = p.anchor_width * 0.5
         x_scale = target_width / current_width            
@@ -310,6 +313,25 @@ if __name__ == '__main__':
       
     print(len(all_commands))
     send_commands(all_commands)
-
+    
+    # write commands
+    if False:        
+        with open('plot_commands.txt', 'w') as f:
+            f.write(''.join(all_commands))  
+        
+    # commands analysis
+    if True:
+        compact_commands = []
+        last_c = -1
+        repetition = 0
+        for c in all_commands:    
+            repetition += 1
+            if c != last_c:
+                compact_commands.append([last_c, repetition])
+                repetition = 0
+                last_c = c
+                
+    command_lengths = set(c[1] for c in compact_commands)
+            
     # sim.draw_svg(draw_move_lines=False, draw_tension_lines=False, draw_anchor_lines=False)
     sim.draw_svg(draw_move_lines=True, draw_tension_lines=True, draw_anchor_lines=True)
