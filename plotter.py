@@ -38,7 +38,8 @@ class Plotter(simulation.Simulation):
             for anchor in [0, 1]:
                 direction = np.sign(line_steps[anchor])
                 number_of_steps = int(abs(np.round(line_steps[anchor], 0)))
-                step_sequence.extend(number_of_steps * [self._step_command(anchor, direction)])
+                if number_of_steps > 0:
+                    step_sequence.extend(number_of_steps * [self._step_command(anchor, direction)])
             
             return step_sequence
         
@@ -67,35 +68,52 @@ class Plotter(simulation.Simulation):
 
         else:
             # polar grid
-            np_anchor = np.array(self.anchor_points)
-            current_point = np.array(self.pen_position)
-            target_point = np.array([x, y])
-            delta_point = target_point - current_point
-            delta_max_steps = int(10 + abs(np.ceil(np.sum(delta_point / self.step_unit))))
-            
-            prev_steps = np.array([-1, -1])
-            delta_steps = np.array([0, 0])
-            dist = np.array([0, 0])
-            for i in np.linspace(0, 1, delta_max_steps):
-                temp_point = current_point + i * delta_point
-                for anchor in [0, 1]:
-                    dist[anchor] = np.linalg.norm(temp_point - np_anchor[anchor])
+            approach = 'rounding'
+            # approach = 'test'
+            if approach == 'rounding':
+                np_anchor = np.array(self.anchor_points)
+                current_point = np.array(self.pen_position)
+                target_point = np.array([x, y])
+                delta_point = target_point - current_point
+                delta_max_steps = int(10 + abs(np.ceil(np.sum(delta_point / self.step_unit))))
                 
-                # the closest polar grid point to temp_point is determined by rounding
-                steps = np.round(dist / self.step_unit, 0)
-                
-                if prev_steps[0] > -1:
-                    delta_steps = steps - prev_steps
-                    
-                # if step numbers changed for the closest point we need a command
-                if any(abs(delta_steps)) > 0:
+                prev_steps = np.array([-1, -1])
+                delta_steps = np.array([0, 0])
+                dist = np.array([0.0, 0.0])
+                for i in np.linspace(0, 1, delta_max_steps):
+                    temp_point = current_point + i * delta_point
                     for anchor in [0, 1]:
-                        direction = np.sign(delta_steps[anchor])
-                        for _ in range(int(abs(delta_steps[anchor]))):
-                            step_sequence.append(self._step_command(anchor, direction))
+                        dist[anchor] = np.linalg.norm(temp_point - np_anchor[anchor])
                     
-                prev_steps = steps
+                    # the closest polar grid point to temp_point is determined by rounding
+                    steps = np.round(dist / self.step_unit, 0)
+                    
+                    if prev_steps[0] > -1:
+                        delta_steps = steps - prev_steps
+                        
+                    # if step numbers changed for the closest point we need a command
+                    if any(abs(delta_steps)) > 0:
+                        for anchor in [0, 1]:
+                            direction = np.sign(delta_steps[anchor])
+                            for _ in range(int(abs(delta_steps[anchor]))):
+                                step_sequence.append(self._step_command(anchor, direction))
+                        
+                    prev_steps = steps
+                    
+            elif approach == 'test':
+                np_anchor = np.array(self.anchor_points)
+                start_point = np.array(self.pen_position)
+                target_point = np.array([x, y])
+                delta_point = target_point - current_point
                 
+                
+                direction = np.sign(line_steps)
+                number_of_steps = np.abs(np.round(line_steps, 0))
+                
+                
+            else:
+                raise NotImplementedError
+                                    
         return step_sequence
     
     def sequence_to(self, x, y, draw_line=False):
@@ -105,7 +123,7 @@ class Plotter(simulation.Simulation):
             step_sequence = [command_dict['PD']] 
         if (not draw_line) and self._pen_down:
             step_sequence = [command_dict['PU']] 
-        step_sequence.extend(self.find_step_squence(x, y, fast=not draw_line))
+        step_sequence.extend(self.find_step_squence(x, y, fast=(not draw_line)))
         # step_sequence.append(command_dict['PU'])
         
         self.send_commands(step_sequence)
