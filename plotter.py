@@ -177,7 +177,7 @@ if __name__ == '__main__':
         p.scale = [1, 1]
         
         pulley_diameter = 10
-        full_rotation_steps = 200 * 1
+        full_rotation_steps = 200 * 8
         sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
         
         # sim.step_unit = p.step_unit = 1  # 0.1
