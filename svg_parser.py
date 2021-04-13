@@ -12,7 +12,11 @@ paths, attributes = svg2paths(f'svg/{filename}.svg')
 
 with open(f'svg/{filename}.path', 'w') as f:
     for k, v in enumerate(attributes):
-        print(v['d'])  # print d-string of k-th path in SVG
+        
+        try:
+            print(v['d'])  # print d-string of k-th path in SVG
+        except KeyError:
+            continue
         f.write(v['d'])  # print d-string of k-th path in SVG
         
 
