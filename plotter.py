@@ -150,7 +150,7 @@ if __name__ == '__main__':
     send_commands = arduino_serial.send_commands
     
     sim = simulation.Simulation()
-    send_commands = sim.send_commands
+    # send_commands = sim.send_commands
     
     # def send_commands(commands):
     #     sim.send_commands(commands)
@@ -213,18 +213,25 @@ if __name__ == '__main__':
         # all_commands.extend(p.line_to(150, 100))
         # all_commands.extend(p.line_to(299, 100))
         
-        filename = 'calibration'
-        p.translate = [238, 180]
-        p.scale = [0.3, 0.3]
-        sim.step_unit = p.step_unit = 1  # 0.1
+        # filename = 'calibration'
+        # p.translate = [238, 180]
+        # p.scale = [0.3, 0.3]
+        # sim.step_unit = p.step_unit = 1  # 0.1
         
         # filename = 'test_pattern'
         # p.translate = [100, 200]
         # p.scale = [0.4, 0.4]
         
-        # filename = 'penguin'
+        # filename = 'star'
+        # p.translate = [500, 289]
+        # p.scale = [0.4, 0.4]
+        # sim.step_unit = p.step_unit = 5  # 0.1
+              
+        filename = 'penguin'
         # p.translate = [391, 30]
         # p.scale = [2.5, 2.5]
+        p.translate = [310, 180]
+        p.scale = [1, 1]
         
         # p.find_home()
         # p.set_home()
