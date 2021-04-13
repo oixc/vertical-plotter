@@ -130,3 +130,6 @@ dmypy.json
 
 # simulation outputs
 *simulation*.svg
+
+# temporary inputs
+/svg
