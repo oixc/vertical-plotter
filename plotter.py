@@ -338,7 +338,21 @@ if __name__ == '__main__':
                 repetition = 0
                 last_c = c
                 
-    command_lengths = set(c[1] for c in compact_commands)
+        counter = 0
+        prev_count = -1
+        prev_c = -1
+        for c, count in compact_commands:
+            if c in ['a', 'b', 'c', 'd']:
+                # print(prev_c, prev_count, c, count)
+                if (prev_count == 1) and (count == 1):
+                    print(prev_c, c)
+                    counter += 1
+                prev_count = count
+            else:
+                prev_count = -1
+            prev_c = c
+            
+        command_lengths = set(c[1] for c in compact_commands)
             
     # sim.draw_svg(draw_move_lines=False, draw_tension_lines=False, draw_anchor_lines=False)
     sim.draw_svg(draw_move_lines=True, draw_tension_lines=True, draw_anchor_lines=True)
