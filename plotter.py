@@ -9,6 +9,7 @@ import arduino_serial
 import simulation
 import numpy as np
 from util import command_dict
+import cairo
 
 class Plotter(simulation.Simulation):
     def __init__(self):
@@ -101,15 +102,210 @@ class Plotter(simulation.Simulation):
                     prev_steps = steps
                     
             elif approach == 'test':
+                
+                simulated_pen_position = []
+                current_points = []
+                
+                surface = cairo.SVGSurface('step_sequence.svg', 10 * self.anchor_width, 10 * self.max_line_length)
+                cr = cairo.Context(surface)
+                cr.scale(25, 25)
+                cr.translate(-self.pen_position[0] + 10, -self.pen_position[1] + 10)
+                
                 np_anchor = np.array(self.anchor_points)
                 start_point = np.array(self.pen_position)
-                target_point = np.array([x, y])
-                delta_point = target_point - current_point
+                
+                target_line_length = np.array(self.find_line_length(x, y))
+                target_steps = target_line_length / self.step_unit
+                target_steps = np.round(target_steps, 0)
+                target_line_length = target_steps * self.step_unit
+                
+                target_point = np.array(self.pen_position_from_lines(target_line_length))
+                delta_point = target_point - start_point
+                
+                current_line_length = np.array(self.line_length)
+                
+                current_steps = current_line_length / self.step_unit
+                # target_steps = target_line_length / self.step_unit
+                
+                line_steps = target_steps - current_steps
+                
+                directions = np.sign(line_steps)
+                number_of_steps = np.abs(np.round(line_steps, 0)).astype(int)
+                
+                current_point = start_point
+                # current_points.append(current_point)
+                # simulated_pen_position.append(self.pen_position_from_lines(current_steps * self.step_unit))
                 
                 
-                direction = np.sign(line_steps)
-                number_of_steps = np.abs(np.round(line_steps, 0))
                 
+                cr.save()
+                for anchor in [0, 1]:
+                    for steps in range(number_of_steps[anchor]):
+                        cr.new_sub_path()
+                        cr.arc(*self.anchor_points[anchor], (current_steps[anchor] + directions[anchor] * steps) * self.step_unit, 0, 2 * np.pi)
+                        cr.set_source_rgba(0, 0, 0, 0.5)
+                        # cr.set_dash([0.1, 0.1])
+                        cr.set_line_width(0.05)
+                        cr.stroke()
+                cr.restore()
+                
+                cr.move_to(*start_point)
+                cr.line_to(*target_point)
+                cr.set_source_rgb(1, 0, 0)
+                cr.set_line_width(0.1)
+                cr.stroke()
+                
+                while sum(number_of_steps) > 0:
+                    current_points.append(current_point)
+                    simulated_pen_position.append(self.pen_position_from_lines(current_steps * self.step_unit))
+                    current_point = self.pen_position_from_lines(current_steps * self.step_unit)
+                
+                    next_point1 = current_point - np_anchor
+                    next_point2 = next_point1
+                    for anchor in [0, 1]:
+                        next_point2[anchor] = next_point1[anchor] / current_steps[anchor] * (current_steps[anchor] + directions[anchor])
+                    next_point = next_point2 + np_anchor
+                             
+                    # next_point = np_anchor.astype(float)
+                    # for anchor in [0, 1]:
+                    #     temp_next_steps = current_steps
+                    #     temp_next_steps[anchor] += directions[anchor]
+                    #     next_point[anchor] = self.pen_position_from_lines(temp_next_steps * self.step_unit)
+                        
+                    # cr.save()
+                    # for anchor in [0, 1]:
+                    #     cr.new_sub_path()
+                    #     cr.arc(*self.anchor_points[anchor], current_steps[anchor] * self.step_unit, 0, 2 * np.pi)
+                    #     cr.set_source_rgba(0, 0, 0, 0.5)
+                    #     # cr.set_dash([0.1, 0.1])
+                    #     cr.set_line_width(0.05)
+                    #     cr.stroke()
+                    # cr.restore()
+                    
+                    # cr.save()
+                    # for anchor in [0, 1]:
+                    #     cr.move_to(*current_point)
+                    #     cr.line_to(*self.anchor_points[anchor])
+                    #     cr.set_source_rgba(0, 0, 0, 0.5)
+                    #     # cr.set_dash([0.1, 0.1])
+                    #     cr.set_line_width(0.05)
+                    #     cr.stroke()
+                    # cr.restore()
+                        
+                
+                    for anchor in [0, 1]:
+                        cr.move_to(*current_point)
+                        cr.line_to(*next_point[anchor])
+                        cr.set_source_rgb(0, 0, 1)
+                        cr.stroke()
+                        
+                        
+                    # cr.move_to(*next_point[0])
+                    # cr.line_to(*next_point[1])
+                    # cr.set_source_rgb(0, 1, 0)
+                    # cr.stroke()
+                    
+                
+                    # next_point[0] + t0 * (next_point[1] - next_point[0])
+                    # start_point + t1 * (target_point - start_point)
+                    
+                    x0 = next_point[0][0]
+                    y0 = next_point[0][1]
+                    
+                    dx0 = (next_point[1] - next_point[0])[0]
+                    dy0 = (next_point[1] - next_point[0])[1]
+                    
+                    x1 = start_point[0]
+                    y1 = start_point[1]
+                    
+                    dx1 = (target_point - start_point)[0]
+                    dy1 = (target_point - start_point)[1]
+                    
+                    # print('dx0, dy0, dx1, dy1', dx0, dy0, dx1, dy1)
+                    if dx0 == 0:
+                        t1 = (x0 - x1) / dx1
+                        y = y1 + t1 * dy1
+                        t0 = (y - y0) / dy0
+                    elif dy1 == 0:
+                        if dy0 == 0:
+                            t0 = 0
+                        else:
+                            t0 = (y1 - y0) / dy0
+                    elif dy0 == 0:
+                        t1 = (y0 - y1) / dy1
+                        x = x1 + t1 * dx1
+                        t0 = (x - x0) / dx0
+                    elif dx1 == 0:
+                        if dx0 == 0:
+                            t0 = 0
+                        else:
+                            t0 = (x1 - x0) / dx0    
+                    else:
+                        part1 = (x1 - x0) / dx0
+                        part2 = dx1 / dx0 * (y0 - y1) / dy1
+                        part3 = 1 - dx1 / dx0 * dy0 / dy1
+                        
+                        t0 = (part1 + part2) / part3 
+                        
+                    # print('t0', t0)
+                    # assert 0 <= t0 <= 1, t0
+                    if t0 < 0.5:
+                        anchor = 0
+                    else:
+                        anchor = 1
+                        
+                    # if number_of_steps[anchor] <= 0:
+                    #     anchor = 1 - anchor
+                        
+                    direction = directions[anchor]
+                    step_sequence.append(self._step_command(anchor, direction))
+                    number_of_steps[anchor] -= 1
+                    current_steps[anchor] += directions[anchor]
+                    current_point = next_point[anchor]      
+                        
+                    # debugging information
+                    x = x0 + t0 * dx0
+                    y = y0 + t0 * dy0
+                    
+                    t1_x = (x - x1) / dx1
+                    t1_y = (y - y1) / dy1 
+                    
+                    cr.move_to(*next_point[anchor])
+                    cr.line_to(x, y)
+                    cr.set_source_rgb(0, 1, 0)
+                    cr.stroke()
+                    
+                    epsilon = 1e-10
+                    
+                    assert abs(t1_x - t1_y) < epsilon
+                    # print('t1_x, t1_y', t1_x, t1_y, abs(t1_x - t1_y))
+                    
+                    t1 = t1_x
+                    x_t1 = x1 + t1 * dx1
+                    y_t1 = y1 + t1 * dy1
+                    
+                    assert abs(x - x_t1) < epsilon
+                    assert abs(y - y_t1) < epsilon
+                    # print('x, y, next_point[anchor]', x, y, next_point[anchor])
+                    
+                    # print('t0, anchor, direction', t0, anchor, direction)
+                    # print('number_of_steps', number_of_steps)
+                    # print('current_steps', current_steps)
+                    # print('target_steps', target_steps)
+                    
+                cr.move_to(*current_points[0])
+                for p in current_points[1:]:
+                    cr.line_to(*p)
+                cr.set_source_rgb(1, 1, 0)
+                cr.stroke()
+                    
+                cr.move_to(*simulated_pen_position[0])
+                for p in simulated_pen_position[1:]:
+                    cr.line_to(*p)
+                cr.set_source_rgb(0.5, 0, 0.5)
+                cr.stroke()
+                
+                surface.finish()
                 
             else:
                 raise NotImplementedError
