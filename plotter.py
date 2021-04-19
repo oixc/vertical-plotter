@@ -70,7 +70,7 @@ class Plotter(simulation.Simulation):
         else:
             # polar grid
             approach = 'rounding'
-            # approach = 'test'
+            approach = 'test'
             if approach == 'rounding':
                 np_anchor = np.array(self.anchor_points)
                 current_point = np.array(self.pen_position)
