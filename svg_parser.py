@@ -42,7 +42,7 @@ if clean_up:
             y = float(next(path))
             action = 'L'
         else:
-            raise NotImplementedError()
+            raise NotImplementedError(action)
             
         clean_path.append(action)
         clean_path.append(str(x))
