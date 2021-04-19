@@ -350,6 +350,39 @@ class Plotter(simulation.Simulation):
         return self.sequence_to(x, y, draw_line=False)
     
     
+def create_plotter(simulate=True, anchor_width=1000):
+    sim = simulation.Simulation()
+
+    if simulate:
+        send_commands = sim.send_commands
+    else:
+        send_commands = arduino_serial.send_commands
+
+    p = Plotter()
+    
+    sim.anchor_points[0] = (0, 0)
+    sim.anchor_points[1] = (anchor_width, 0)
+    sim.guesstimate_line_lenth()
+    sim.find_home()
+    sim.set_home()
+    sim.find_lower_tension_border(min_tension_threshold=1/3)
+    sim.max_line_length = sim.anchor_width * 1.2
+    p.anchor_points = sim.anchor_points.copy()
+    p.line_length = sim.line_length.copy()
+    p.max_line_length = sim.max_line_length
+    p.find_home()
+    p.set_home()
+    
+    p.translate = [0, 0]
+    p.scale = [1, 1]
+    
+    pulley_diameter = 10
+    full_rotation_steps = 200 * 4
+    sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
+    
+    return p, send_commands, sim 
+    
+    
 if __name__ == '__main__':    
     send_commands = arduino_serial.send_commands
     
