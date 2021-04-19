@@ -51,7 +51,7 @@ class Simulation():
     def guesstimate_line_lenth(self):
         self.line_length = [self.anchor_width * 0.55] * 2
         
-    def apply__readable_command(self, command):
+    def apply_readable_command(self, command):
         self.apply_command(command_dict[command])
 
     def apply_command(self, command):
