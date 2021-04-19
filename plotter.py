@@ -106,10 +106,12 @@ class Plotter(simulation.Simulation):
                 simulated_pen_position = []
                 current_points = []
                 
-                surface = cairo.SVGSurface('step_sequence.svg', 10 * self.anchor_width, 10 * self.max_line_length)
-                cr = cairo.Context(surface)
-                cr.scale(25, 25)
-                cr.translate(-self.pen_position[0] + 10, -self.pen_position[1] + 10)
+                debug = False
+                if debug:
+                    surface = cairo.SVGSurface('step_sequence.svg', 10 * self.anchor_width, 10 * self.max_line_length)
+                    cr = cairo.Context(surface)
+                    cr.scale(25, 25)
+                    cr.translate(-self.pen_position[0] + 10, -self.pen_position[1] + 10)
                 
                 np_anchor = np.array(self.anchor_points)
                 start_point = np.array(self.pen_position)
@@ -138,26 +140,29 @@ class Plotter(simulation.Simulation):
                 
                 
                 
-                cr.save()
-                for anchor in [0, 1]:
-                    for steps in range(number_of_steps[anchor]):
-                        cr.new_sub_path()
-                        cr.arc(*self.anchor_points[anchor], (current_steps[anchor] + directions[anchor] * steps) * self.step_unit, 0, 2 * np.pi)
-                        cr.set_source_rgba(0, 0, 0, 0.5)
-                        # cr.set_dash([0.1, 0.1])
-                        cr.set_line_width(0.05)
-                        cr.stroke()
-                cr.restore()
-                
-                cr.move_to(*start_point)
-                cr.line_to(*target_point)
-                cr.set_source_rgb(1, 0, 0)
-                cr.set_line_width(0.1)
-                cr.stroke()
+                if debug:
+                    cr.save()
+                    for anchor in [0, 1]:
+                        for steps in range(number_of_steps[anchor]):
+                            cr.new_sub_path()
+                            cr.arc(*self.anchor_points[anchor], (current_steps[anchor] + directions[anchor] * steps) * self.step_unit, 0, 2 * np.pi)
+                            cr.set_source_rgba(0, 0, 0, 0.5)
+                            # cr.set_dash([0.1, 0.1])
+                            cr.set_line_width(0.05)
+                            cr.stroke()
+                    cr.restore()
+                    
+                    cr.move_to(*start_point)
+                    cr.line_to(*target_point)
+                    cr.set_source_rgb(1, 0, 0)
+                    cr.set_line_width(0.1)
+                    cr.stroke()
                 
                 while sum(number_of_steps) > 0:
-                    current_points.append(current_point)
-                    simulated_pen_position.append(self.pen_position_from_lines(current_steps * self.step_unit))
+                    
+                    if debug:   
+                        current_points.append(current_point)
+                        simulated_pen_position.append(self.pen_position_from_lines(current_steps * self.step_unit))
                     current_point = self.pen_position_from_lines(current_steps * self.step_unit)
                 
                     next_point1 = current_point - np_anchor
@@ -193,11 +198,12 @@ class Plotter(simulation.Simulation):
                     # cr.restore()
                         
                 
-                    for anchor in [0, 1]:
-                        cr.move_to(*current_point)
-                        cr.line_to(*next_point[anchor])
-                        cr.set_source_rgb(0, 0, 1)
-                        cr.stroke()
+                    if debug:   
+                        for anchor in [0, 1]:
+                            cr.move_to(*current_point)
+                            cr.line_to(*next_point[anchor])
+                            cr.set_source_rgb(0, 0, 1)
+                            cr.stroke()
                         
                         
                     # cr.move_to(*next_point[0])
