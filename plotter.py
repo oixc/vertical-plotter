@@ -490,29 +490,40 @@ if __name__ == '__main__':
         sim.anchor_points[0] = (0, 0)
         sim.anchor_points[1] = (1000, 0)
         sim.guesstimate_line_lenth()
-        sim.find_home()
-        sim.set_home()        
+        # sim.find_home()
+        # sim.set_home()        
+        sim.line_length = [300.0, 1000.0]
         sim.find_lower_tension_border()
         sim.max_line_length = sim.anchor_width * 1.2
         p.anchor_points = sim.anchor_points.copy()
         p.line_length = sim.line_length.copy()
         p.max_line_length = sim.max_line_length
-        p.find_home()
-        p.set_home()
+        # p.find_home()
+        # p.set_home()
         
         p.translate = [0, 0]
         p.scale = [1, 1]
         
         pulley_diameter = 10
-        full_rotation_steps = 200 * 1
+        full_rotation_steps = 200 * 8
         sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
+        # sim.step_unit = p.step_unit = 1.0
         
         all_commands = []
-        all_commands.extend(p.rel_line_to(0, 200))
-        all_commands.extend(p.rel_move_to(-100, -100))
-        all_commands.extend(p.rel_line_to(200, 0))
-        all_commands.append(command_dict['PU'])
-        all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
+        # all_commands.extend(p.rel_line_to(0, 200))
+        # all_commands.extend(p.rel_move_to(-100, -100))
+        # all_commands.extend(p.rel_line_to(200, 0))
+        all_commands.extend(p.rel_line_to(100, 100))
+        all_commands.extend(p.rel_line_to(100, -100))
+        all_commands.extend(p.rel_line_to(100, 100))
+        all_commands.extend(p.rel_line_to(100, -100))
+        all_commands.extend(p.rel_line_to(100, 100))
+        all_commands.extend(p.rel_line_to(100, -100))
+        all_commands.extend(p.rel_line_to(100, 100))
+        all_commands.extend(p.rel_line_to(100, -100))
+        all_commands.extend(p.rel_line_to(100, 100))
+        # all_commands.append(command_dict['PU'])
+        # all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
       
     else:
         # p.translate = [20, 0]
