@@ -114,6 +114,9 @@ class Simulation():
     def pen_position(self):
         return find_pen_position(self.line_length[0], self.line_length[1], self.anchor_width)
     
+    def pen_position_from_lines(self, line_length):
+        return find_pen_position(line_length[0], line_length[1], self.anchor_width)
+    
     def find_line_length(self, x, y):
         # pythagoras to the rescue: a**2 + b**2 = c**2
         line_length = []
