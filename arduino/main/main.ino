@@ -1,6 +1,10 @@
 /* 
- *  simulate two stepper motors with LEDs blinking for each step & direction
+ *  main control file for vertical pen plotter
  */
+#include <Servo.h>
+
+#define BAUDRATE 9600
+
 #define MOTOR_LEFT 0
 #define MOTOR_RIGHT 1
 
@@ -10,8 +14,12 @@
 #define DIRECTION_PIN 0
 #define STEP_PIN 1
 
+#define PEN_PIN 12
+#define PEN_POS_UP 110
+#define PEN_POS_DOWN 140
+#define PEN_DELAY 100 
 
-#define BAUDRATE 9600
+Servo pen_servo;  // create servo object to control the pen lift servo
 
 int pins[2][2] = { // direction, step
   {6, 3}, // left
@@ -32,7 +40,7 @@ void setup() {
   pinMode(pins[MOTOR_RIGHT][DIRECTION_PIN], OUTPUT);
   pinMode(pins[MOTOR_RIGHT][STEP_PIN], OUTPUT);
 
-  pinMode(penPin, OUTPUT);
+  pen_servo.attach(PEN_PIN);
   penUp();
 
   // Serial.println("Ready");
@@ -64,15 +72,15 @@ void rotate(int motor, int dir, int steps) {
 }
 
 void penDown() {         
-  delay(500);        
-  // digitalWrite(penPin, HIGH);              
-  // delay(500);
+  delay(PEN_DELAY);        
+  pen_servo.write(PEN_POS_UP);           
+  delay(PEN_DELAY);
 }
 
 void penUp() {         
-  delay(500);        
-  // digitalWrite(penPin, LOW);              
-  // delay(500);
+  delay(PEN_DELAY);        
+  pen_servo.write(PEN_POS_DOWN);           
+  delay(PEN_DELAY);
 }
 
 char c;
