@@ -264,48 +264,50 @@ class Plotter(simulation.Simulation):
                     current_point = next_point[anchor]      
                         
                     # debugging information
-                    x = x0 + t0 * dx0
-                    y = y0 + t0 * dy0
-                    
-                    t1_x = (x - x1) / dx1
-                    t1_y = (y - y1) / dy1 
-                    
-                    cr.move_to(*next_point[anchor])
-                    cr.line_to(x, y)
-                    cr.set_source_rgb(0, 1, 0)
+                    if debug:   
+                        x = x0 + t0 * dx0
+                        y = y0 + t0 * dy0
+                        
+                        t1_x = (x - x1) / dx1
+                        t1_y = (y - y1) / dy1 
+                        
+                        cr.move_to(*next_point[anchor])
+                        cr.line_to(x, y)
+                        cr.set_source_rgb(0, 1, 0)
+                        cr.stroke()
+                        
+                        epsilon = 1e-10
+                        
+                        assert abs(t1_x - t1_y) < epsilon
+                        # print('t1_x, t1_y', t1_x, t1_y, abs(t1_x - t1_y))
+                        
+                        t1 = t1_x
+                        x_t1 = x1 + t1 * dx1
+                        y_t1 = y1 + t1 * dy1
+                        
+                        assert abs(x - x_t1) < epsilon
+                        assert abs(y - y_t1) < epsilon
+                        # print('x, y, next_point[anchor]', x, y, next_point[anchor])
+                        
+                        # print('t0, anchor, direction', t0, anchor, direction)
+                        # print('number_of_steps', number_of_steps)
+                        # print('current_steps', current_steps)
+                        # print('target_steps', target_steps)
+                        
+                if debug:   
+                    cr.move_to(*current_points[0])
+                    for p in current_points[1:]:
+                        cr.line_to(*p)
+                    cr.set_source_rgb(1, 1, 0)
+                    cr.stroke()
+                        
+                    cr.move_to(*simulated_pen_position[0])
+                    for p in simulated_pen_position[1:]:
+                        cr.line_to(*p)
+                    cr.set_source_rgb(0.5, 0, 0.5)
                     cr.stroke()
                     
-                    epsilon = 1e-10
-                    
-                    assert abs(t1_x - t1_y) < epsilon
-                    # print('t1_x, t1_y', t1_x, t1_y, abs(t1_x - t1_y))
-                    
-                    t1 = t1_x
-                    x_t1 = x1 + t1 * dx1
-                    y_t1 = y1 + t1 * dy1
-                    
-                    assert abs(x - x_t1) < epsilon
-                    assert abs(y - y_t1) < epsilon
-                    # print('x, y, next_point[anchor]', x, y, next_point[anchor])
-                    
-                    # print('t0, anchor, direction', t0, anchor, direction)
-                    # print('number_of_steps', number_of_steps)
-                    # print('current_steps', current_steps)
-                    # print('target_steps', target_steps)
-                    
-                cr.move_to(*current_points[0])
-                for p in current_points[1:]:
-                    cr.line_to(*p)
-                cr.set_source_rgb(1, 1, 0)
-                cr.stroke()
-                    
-                cr.move_to(*simulated_pen_position[0])
-                for p in simulated_pen_position[1:]:
-                    cr.line_to(*p)
-                cr.set_source_rgb(0.5, 0, 0.5)
-                cr.stroke()
-                
-                surface.finish()
+                    surface.finish()
                 
             else:
                 raise NotImplementedError
