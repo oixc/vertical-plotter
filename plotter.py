@@ -29,13 +29,13 @@ class Plotter(simulation.Simulation):
     
     def find_step_squence(self, x, y, fast=False):
         target_line_length = np.array(self.find_line_length(x, y))
-        current_line_lenght = np.array(self.line_length)
-        delta_line_lenght = target_line_length - current_line_lenght
-        line_steps = delta_line_lenght / self.step_unit
+        current_line_length = np.array(self.line_length)
+        delta_line_length = target_line_length - current_line_length
+        line_steps = delta_line_length / self.step_unit
         
         step_sequence = []
         if any(abs(line_steps) < 0.5):
-            # only one line needs to change lenght
+            # only one line needs to change length
             for anchor in [0, 1]:
                 direction = np.sign(line_steps[anchor])
                 number_of_steps = int(abs(np.round(line_steps[anchor], 0)))
