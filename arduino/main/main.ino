@@ -15,8 +15,8 @@
 #define STEP_PIN 1
 
 #define PEN_PIN 12
-#define PEN_POS_UP 110
-#define PEN_POS_DOWN 140
+#define PEN_POS_UP 120
+#define PEN_POS_DOWN 80
 #define PEN_DELAY 100 
 
 Servo pen_servo;  // create servo object to control the pen lift servo
@@ -73,13 +73,13 @@ void rotate(int motor, int dir, int steps) {
 
 void penDown() {         
   delay(PEN_DELAY);        
-  pen_servo.write(PEN_POS_UP);           
+  pen_servo.write(PEN_POS_DOWN);           
   delay(PEN_DELAY);
 }
 
 void penUp() {         
   delay(PEN_DELAY);        
-  pen_servo.write(PEN_POS_DOWN);           
+  pen_servo.write(PEN_POS_UP);           
   delay(PEN_DELAY);
 }
 
