@@ -20,7 +20,8 @@ def cmd(ser, cmd):
 def send_commands(commands):
     with serial.Serial() as ser:
         ser.baudrate = 9600
-        ser.port = 'COM4'
+        ser.port = 'COM4'  # usb
+        # ser.port = 'COM5'  # bluetooth
         ser.timeout = None
         ser.open()
         if not ser.read() == b'A':
@@ -33,10 +34,12 @@ def send_commands(commands):
             cmd(ser, c)
                                 
 if __name__ == '__main__':
-    knightrider = ['a', 'b', 'c', 'd']
-    knightrider.extend(reversed(knightrider[1:-1]))
-    knightrider = itertools.cycle(knightrider)
+    # knightrider = ['a', 'b', 'c', 'd']
+    # knightrider.extend(reversed(knightrider[1:-1]))
+    # knightrider = itertools.cycle(knightrider)
     
-    send_commands(['b'] * 10)
-    send_commands(['c'] * 50)
-    send_commands(knightrider)
+    send_commands(['b'] * 4 * 200)
+    # send_commands(['c'] * 50)
+    # send_commands(knightrider)
+    
+    # send_commands(['e', 'f'] * 10)
