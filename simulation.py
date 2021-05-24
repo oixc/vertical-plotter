@@ -44,6 +44,7 @@ class Simulation():
         self.set_home()
         self.lower_tension_border = [[(0, 0), (0, 0), (0, 0)], [(0, 0), (0, 0), (0, 0)]]
         self.find_lower_tension_border()
+        self.drawing_area = [(0, 0), (self.anchor_width, self.anchor_width)]  # top left and bottom right corner
         
     def guesstimate_anchor_points(self):
         self.anchor_points = [(0, 0), (0.8 * sum(self.line_length), 0)]        
@@ -176,7 +177,7 @@ class Simulation():
             self.lower_tension_border[1].append((start_x - dx, y))   
             
     
-    def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True, draw_tension_lines=True, draw_anchor_lines=True):
+    def draw_svg(self, filename='./plotter_simulation.svg', draw_move_lines=True, draw_tension_lines=True, draw_anchor_lines=True, draw_drawing_area=True):
         # finish virtual drawing
         if self._pen_down:
             self.pen_up()  
@@ -192,6 +193,13 @@ class Simulation():
         anchors = dwg.add(dwg.g(id='anchors', fill='lightgrey', stroke='red', stroke_width=1))
         for center in self.anchor_points:
             anchors.add(dwg.circle(center=center, r=5))
+        
+        if draw_drawing_area:
+            drawing_area = dwg.add(dwg.g(id='drawing_area', fill='white', stroke='grey', stroke_dasharray='2,2', stroke_width=1))            
+            drawing_area.add(dwg.line(start=(self.drawing_area[0][0], self.drawing_area[0][1]), end=(self.drawing_area[0][0], self.drawing_area[1][1])))
+            drawing_area.add(dwg.line(start=(self.drawing_area[0][0], self.drawing_area[1][1]), end=(self.drawing_area[1][0], self.drawing_area[1][1])))
+            drawing_area.add(dwg.line(start=(self.drawing_area[1][0], self.drawing_area[1][1]), end=(self.drawing_area[1][0], self.drawing_area[0][1])))
+            drawing_area.add(dwg.line(start=(self.drawing_area[1][0], self.drawing_area[0][1]), end=(self.drawing_area[0][0], self.drawing_area[0][1])))
         
         if draw_tension_lines:
             tension_border = dwg.add(dwg.g(id='tension_border', fill='white', stroke_dasharray='5,5', stroke='blue', stroke_width=1))
