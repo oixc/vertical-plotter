@@ -402,6 +402,7 @@ if __name__ == '__main__':
         sim.guesstimate_line_lenth()
         sim.find_home()
         sim.set_home()
+        sim.drawing_area = [(390 + 30, 300 + 30), (390 + 297 - 50, 300 + 420 - 50)]
         sim.find_lower_tension_border(min_tension_threshold=1/3)
         sim.max_line_length = sim.anchor_width * 1.2
         p.anchor_points = sim.anchor_points.copy()
@@ -409,12 +410,15 @@ if __name__ == '__main__':
         p.max_line_length = sim.max_line_length
         p.find_home()
         p.set_home()
+        p.drawing_area = sim.drawing_area  
+        
+        place_to_drawing_area = False
         
         p.translate = [0, 0]
         p.scale = [1, 1]
         
         pulley_diameter = 10
-        full_rotation_steps = 200 * 8
+        full_rotation_steps = 200 * 4
         sim.step_unit = p.step_unit = np.pi * pulley_diameter / full_rotation_steps
         
         # sim.step_unit = p.step_unit = 1  # 0.1
@@ -486,12 +490,13 @@ if __name__ == '__main__':
             xs.append(x)
             ys.append(y)
             
-            if action == 'M':
-                all_commands.extend(p.move_to(x, y))
-            elif action == 'L':
-                all_commands.extend(p.line_to(x, y))
-            else:
-                raise NotImplementedError()
+            if not place_to_drawing_area:
+                if action == 'M':
+                    all_commands.extend(p.move_to(x, y))
+                elif action == 'L':
+                    all_commands.extend(p.line_to(x, y))
+                else:
+                    raise NotImplementedError()
                     
         print('top left canvas: ', p.offset(min(xs), min(ys)))
         print('bottom right canvas: ', p.offset(max(xs), max(ys)))
@@ -512,6 +517,37 @@ if __name__ == '__main__':
         
         print('translate', x_translate, y_translate)
         print('scale', x_scale, x_scale)
+        
+        ## scale to drawing area        
+        current_width = max(xs) - min(xs)
+        target_width = p.drawing_area[1][0] - p.drawing_area[0][0]
+        # target_width *= 0.9
+        x_scale = target_width / current_width   
+        
+        current_height = max(ys) - min(ys)
+        target_height = p.drawing_area[1][1] - p.drawing_area[0][1]
+        # target_height *= 0.9
+        y_scale = target_height / current_height            
+        
+        x_scale = y_scale = min(x_scale, y_scale)
+        
+        current_center = (max(xs) + min(xs)) / 2 * x_scale
+        target_center = (p.drawing_area[1][0] + p.drawing_area[0][0]) / 2
+        x_translate = target_center - current_center            
+        
+        # current_top = min(ys) * x_scale
+        # target_top = p.drawing_area[0][1]
+        # y_translate = target_top - current_top        
+        
+        current_center = (max(ys) + min(ys)) / 2 * y_scale
+        target_center = (p.drawing_area[1][1] + p.drawing_area[0][1]) / 2
+        y_translate = target_center - current_center     
+        
+        print('-- drawing area --')        
+        print(f'p.translate = [{x_translate:.0f}, {y_translate:.0f}]')        
+        print(f'p.scale = [{x_scale:.3f}, {y_scale:.3f}]')
+        
+        assert not place_to_drawing_area, 'if we only place to drawing area we do not need the rest'
         
         # return home
         all_commands.append(command_dict['PU'])
