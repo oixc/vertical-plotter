@@ -30,6 +30,10 @@ if clean_up:
     ys = []
         
     path = path.replace(',', ' ')
+    path = path.replace('M', ' M ')
+    path = path.replace('L', ' L ')
+    path = path.replace('H', ' H ')
+    path = path.replace('V', ' V ')
     path = iter(path.split())
     for action in path:
         if action in ['M', 'L']:
