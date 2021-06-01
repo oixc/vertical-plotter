@@ -51,12 +51,6 @@ void setup() {
   Serial.flush();
 }
 
-void blink(int pin) { 
-  digitalWrite(pin, HIGH);    
-  delay(5);                 
-  digitalWrite(pin, LOW);     
-}
-  
 void rotate(int motor, int dir, int steps) {
   if (dir == DIRECTION_RIGHT) {
     // Set the spinning direction clockwise:
