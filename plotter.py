@@ -432,129 +432,174 @@ if __name__ == '__main__':
             
         # send_commands(['f'] + ['c', 'c', 'a'] * 30 + ['e'] + ['a', 'a', 'd'] * 20 + ['f'] + ['a', 'c'] * 30 + ['e']) 
         
-        all_commands = []
+        trace_canvas_extend = False
+        if trace_canvas_extend:
+            top_left = (420.20435385942, 339.20435385942)
+            bottom_right = (636.95435479, 519.82935479)
+            all_commands = []
+            all_commands.extend(p.move_to(*top_left))
+            all_commands.extend(p.move_to(top_left[0], bottom_right[1]))
+            all_commands.extend(p.move_to(*bottom_right))
+            all_commands.extend(p.move_to(bottom_right[0], top_left[1]))
+            all_commands.extend(p.move_to(*p.home))
+
+            # all_commands = []
+            # all_commands.extend(p.move_to(*top_left))
+            # all_commands.extend(p.rel_line_to(100, 0))
+            # all_commands.extend(p.rel_move_to(0, 10))
+            # all_commands.extend(p.rel_line_to(-100, 0))
+            # all_commands.append(command_dict['PU'])
+            # all_commands.extend(p.move_to(*p.home))
         
-        ## rectanlge(100, 100, 100, 100)
-        # p.translate = [300, 400]
-        # p.scale = [4, 4]
-        
-        # intermediate_steps = 10
-        
-        # all_commands.extend(p.move_to(100, 100))
-        # for i in range(intermediate_steps):
-        #     all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
-        # for i in range(intermediate_steps):
-        #     all_commands.extend(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
-        # for i in range(intermediate_steps):
-        #     all_commands.extend(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
-        # for i in range(intermediate_steps):
-        #     all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
-        
-        # all_commands.extend(p.line_to(1, 100))
-        # all_commands.extend(p.line_to(150, 100))
-        # all_commands.extend(p.line_to(299, 100))
-        
-        # filename = 'calibration'
-        # p.translate = [238, 180]
-        # p.scale = [0.3, 0.3]
-        # sim.step_unit = p.step_unit = 1  # 0.1
-        
-        # filename = 'test_pattern'
-        # p.translate = [100, 200]
-        # p.scale = [0.4, 0.4]
-        
-        # filename = 'star'
-        # p.translate = [500, 289]
-        # p.scale = [0.4, 0.4]
-        # sim.step_unit = p.step_unit = 5  # 0.1
-              
-        filename = 'penguin'
-        # p.translate = [391, 30]
-        # p.scale = [2.5, 2.5]
-        p.translate = [310, 180]
-        p.scale = [1, 1]
-        
-        # p.find_home()
-        # p.set_home()
-        with open(f'svg/{filename}.path', 'r') as f:
-            path = f.read()
+        else:
+            all_commands = []
             
-        xs = []
-        ys = []
+            ## rectanlge(100, 100, 100, 100)
+            # p.translate = [300, 400]
+            # p.scale = [4, 4]
             
-        path = iter(path.split())
-        for action in path:
-            x = float(next(path))
-            y = float(next(path))
+            # intermediate_steps = 10
             
-            xs.append(x)
-            ys.append(y)
+            # all_commands.extend(p.move_to(100, 100))
+            # for i in range(intermediate_steps):
+            #     all_commands.extend(p.line_to(100 + (100 / intermediate_steps) * (i + 1), 100))
+            # for i in range(intermediate_steps):
+            #     all_commands.extend(p.line_to(200, 100 + (100 / intermediate_steps) * (i + 1)))
+            # for i in range(intermediate_steps):
+            #     all_commands.extend(p.line_to(200 - (100 / intermediate_steps) * (i + 1), 200))
+            # for i in range(intermediate_steps):
+            #     all_commands.extend(p.line_to(100, 200 - (100 / intermediate_steps) * (i + 1)))
             
-            if not place_to_drawing_area:
-                if action == 'M':
-                    all_commands.extend(p.move_to(x, y))
-                elif action == 'L':
-                    all_commands.extend(p.line_to(x, y))
-                else:
-                    raise NotImplementedError()
-                    
-        print('top left canvas: ', p.offset(min(xs), min(ys)))
-        print('bottom right canvas: ', p.offset(max(xs), max(ys)))
+            # all_commands.extend(p.line_to(1, 100))
+            # all_commands.extend(p.line_to(150, 100))
+            # all_commands.extend(p.line_to(299, 100))
+            
+            # filename = 'calibration'
+            # p.translate = [383, 293]
+            # p.scale = [0.167, 0.167]
+            
+            # sim.step_unit = p.step_unit = 1  # 0.1
+            
+            # filename = 'test_pattern'
+            # # p.translate = [100, 200]
+            # # p.scale = [0.4, 0.4]
+            # p.translate = [400, 319]
+            # p.scale = [0.073, 0.073]
+            
+            # filename = 'star'
+            # p.translate = [500, 289]
+            # p.scale = [0.4, 0.4]
+            # sim.step_unit = p.step_unit = 5  # 0.1
+                  
+            # filename = 'penguin'
+            # # p.translate = [391, 30]
+            # # p.scale = [2.5, 2.5]
+            # p.translate = [310+300, 180]
+            # p.scale = [1, 1]
+            
+            # # p.translate = [460, 380]
+            
+            # filename = 'hearts'
+            # p.translate = [570, 80]
+            # p.scale = [0.25, 0.25]
+            # sim.step_unit = p.step_unit = 0.51  # 0.1
+            
+            # filename = 'noisy_circles_20210524_121419_180443 - Copy'
+            # p.translate = [420, 348]
+            # p.scale = [0.150, 0.150]
+            
+            filename = 'hatching_20210530_120448_789236'
+            p.translate = [420, 409 - 70]
+            p.scale = [0.289, 0.289]
+            
+            # filename = 'boob'
+            # # p.translate = [430, 450]
+            # # p.scale = [0.25, 0.25]
+            # p.translate = [495, 417]
+            # p.scale = [0.529, 0.529]
+            # sim.step_unit = p.step_unit = 1
+            
+            # p.find_home()
+            # p.set_home()
+            with open(f'svg/{filename}.path', 'r') as f:
+                path = f.read()
                 
-        current_width = max(xs) - min(xs)
-        target_width = p.anchor_width * 0.5
-        x_scale = target_width / current_width            
-        x_scale = p.scale[0] 
-        
-        current_center = (max(xs) + min(xs)) / 2 * x_scale
-        target_center = p.anchor_width / 2 
-        x_translate = target_center - current_center            
-        
-        current_top = min(ys) * x_scale
-        target_top = (p.home[1] + p.upper_tension_border) / 2
-        target_top = p.home[1]
-        y_translate = target_top - current_top        
-        
-        print('translate', x_translate, y_translate)
-        print('scale', x_scale, x_scale)
-        
-        ## scale to drawing area        
-        current_width = max(xs) - min(xs)
-        target_width = p.drawing_area[1][0] - p.drawing_area[0][0]
-        # target_width *= 0.9
-        x_scale = target_width / current_width   
-        
-        current_height = max(ys) - min(ys)
-        target_height = p.drawing_area[1][1] - p.drawing_area[0][1]
-        # target_height *= 0.9
-        y_scale = target_height / current_height            
-        
-        x_scale = y_scale = min(x_scale, y_scale)
-        
-        current_center = (max(xs) + min(xs)) / 2 * x_scale
-        target_center = (p.drawing_area[1][0] + p.drawing_area[0][0]) / 2
-        x_translate = target_center - current_center            
-        
-        # current_top = min(ys) * x_scale
-        # target_top = p.drawing_area[0][1]
-        # y_translate = target_top - current_top        
-        
-        current_center = (max(ys) + min(ys)) / 2 * y_scale
-        target_center = (p.drawing_area[1][1] + p.drawing_area[0][1]) / 2
-        y_translate = target_center - current_center     
-        
-        print('-- drawing area --')        
-        print(f'p.translate = [{x_translate:.0f}, {y_translate:.0f}]')        
-        print(f'p.scale = [{x_scale:.3f}, {y_scale:.3f}]')
-        
-        assert not place_to_drawing_area, 'if we only place to drawing area we do not need the rest'
-        
-        # return home
-        all_commands.append(command_dict['PU'])
-        all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
-        # all_commands.extend(p.move_to(p.anchor_width / 2, 200))
-        # all_commands.extend([command_dict['RL']] * 500)
-        
+            xs = []
+            ys = []
+                
+            path = iter(path.split())
+            for action in path:
+                x = float(next(path))
+                y = float(next(path))
+                
+                xs.append(x)
+                ys.append(y)
+                
+                if not place_to_drawing_area:
+                    if action == 'M':
+                        all_commands.extend(p.move_to(x, y))
+                    elif action == 'L':
+                        all_commands.extend(p.line_to(x, y))
+                    else:
+                        raise NotImplementedError()
+                        
+            print('top left canvas: ', p.offset(min(xs), min(ys)))
+            print('bottom right canvas: ', p.offset(max(xs), max(ys)))
+                    
+            current_width = max(xs) - min(xs)
+            target_width = p.anchor_width * 0.5
+            x_scale = target_width / current_width            
+            x_scale = p.scale[0] 
+            
+            current_center = (max(xs) + min(xs)) / 2 * x_scale
+            target_center = p.anchor_width / 2 
+            x_translate = target_center - current_center            
+            
+            current_top = min(ys) * x_scale
+            target_top = (p.home[1] + p.upper_tension_border) / 2
+            target_top = p.home[1]
+            y_translate = target_top - current_top        
+            
+            print('translate', x_translate, y_translate)
+            print('scale', x_scale, x_scale)
+            
+            ## scale to drawing area        
+            current_width = max(xs) - min(xs)
+            target_width = p.drawing_area[1][0] - p.drawing_area[0][0]
+            # target_width *= 0.9
+            x_scale = target_width / current_width   
+            
+            current_height = max(ys) - min(ys)
+            target_height = p.drawing_area[1][1] - p.drawing_area[0][1]
+            # target_height *= 0.9
+            y_scale = target_height / current_height            
+            
+            x_scale = y_scale = min(x_scale, y_scale)
+            
+            current_center = (max(xs) + min(xs)) / 2 * x_scale
+            target_center = (p.drawing_area[1][0] + p.drawing_area[0][0]) / 2
+            x_translate = target_center - current_center            
+            
+            # current_top = min(ys) * x_scale
+            # target_top = p.drawing_area[0][1]
+            # y_translate = target_top - current_top        
+            
+            current_center = (max(ys) + min(ys)) / 2 * y_scale
+            target_center = (p.drawing_area[1][1] + p.drawing_area[0][1]) / 2
+            y_translate = target_center - current_center     
+            
+            print('-- drawing area --')        
+            print(f'p.translate = [{x_translate:.0f}, {y_translate:.0f}]')        
+            print(f'p.scale = [{x_scale:.3f}, {y_scale:.3f}]')
+            
+            assert not place_to_drawing_area, 'if we only place to drawing area we do not need the rest'
+            
+            # return home
+            all_commands.append(command_dict['PU'])
+            all_commands.extend(p.move_to(*p.reverse_offset(*p.home)))
+            # all_commands.extend(p.move_to(p.anchor_width / 2, 200))
+            # all_commands.extend([command_dict['RL']] * 500)
+            
     elif calibrate:
         sim.anchor_points[0] = (0, 0)
         sim.anchor_points[1] = (1000, 0)
@@ -597,9 +642,13 @@ if __name__ == '__main__':
     else:
         # p.translate = [20, 0]
         # p.scale = [1/2, 1/2]
+        top_left = (420.20435385942, 409.20435385942)
+        bottom_right = (636.95435479, 589.82935479)
         all_commands = []
-        all_commands.extend(p.move_to(200, 200))
-        all_commands.extend(p.line_to(20, 200))
+        all_commands.extend(p.move_to(*top_left))
+        all_commands.extend(p.move_to(top_left[0], bottom_right[1]))
+        all_commands.extend(p.move_to(bottom_right[0], top_left[1]))
+        all_commands.extend(p.move_to(*bottom_right))
         all_commands.extend(p.move_to(*p.home))
       
     print(len(all_commands))
@@ -629,7 +678,7 @@ if __name__ == '__main__':
             if c in ['a', 'b', 'c', 'd']:
                 # print(prev_c, prev_count, c, count)
                 if (prev_count == 1) and (count == 1):
-                    print(prev_c, c)
+                    # print(prev_c, c)
                     counter += 1
                 prev_count = count
             else:
