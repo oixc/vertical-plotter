@@ -652,12 +652,12 @@ if __name__ == '__main__':
         all_commands.extend(p.move_to(*bottom_right))
         all_commands.extend(p.move_to(*p.home))
       
-    print(len(all_commands))
-    send_commands(all_commands)
+    # print(len(all_commands))
+    # send_commands(all_commands)
     
     # write commands
-    if False:        
-        with open('plot_commands.txt', 'w') as f:
+    if True:        
+        with open(f'plot_commands_{filename}.txt', 'w') as f:
             f.write(''.join(all_commands))  
         
     # commands analysis
