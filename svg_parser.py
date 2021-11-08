@@ -10,17 +10,19 @@ from svgpathtools import svg2paths
 filename = 'test_pattern'
 paths, attributes = svg2paths(f'svg/{filename}.svg')
 
-with open(f'svg/{filename}.path', 'w') as f:
-    for k, v in enumerate(attributes):
-        
-        try:
-            print(v['d'])  # print d-string of k-th path in SVG
-        except KeyError:
-            continue
-        f.write(v['d'])  # print d-string of k-th path in SVG
+lines_to_path = True
+if lines_to_path:
+    with open(f'svg/{filename}.path', 'w') as f:
+        for k, v in enumerate(attributes):
+            
+            try:
+                print(v['d'])  # print d-string of k-th path in SVG
+            except KeyError:
+                continue
+            f.write(v['d'])  # print d-string of k-th path in SVG
         
 
-clean_up = True
+clean_up = False
 if clean_up:
     with open(f'svg/{filename}.path', 'r') as f:
         path = f.read()
@@ -59,4 +61,4 @@ if clean_up:
     
     with open(f'svg/{filename}.path', 'w') as f:
         f.write(clean_path)
-        
+   
