@@ -402,7 +402,8 @@ if __name__ == '__main__':
         sim.guesstimate_line_lenth()
         sim.find_home()
         sim.set_home()
-        sim.drawing_area = [(390 + 30, 300 + 30), (390 + 297 - 50, 300 + 420 - 50)]
+        # sim.drawing_area = [(390 + 15 - 15, 300 + 25), (390 + 297 - 15 - 15, 300 + 420 - 35)]  # A3
+        sim.drawing_area = [(390 + 15 - 15, 300 + 25), (390 + 297 - 15 - 15, 300 + 210 - 35)]  # A4
         sim.find_lower_tension_border(min_tension_threshold=1/3)
         sim.max_line_length = sim.anchor_width * 1.2
         p.anchor_points = sim.anchor_points.copy()
@@ -434,8 +435,8 @@ if __name__ == '__main__':
         
         trace_canvas_extend = False
         if trace_canvas_extend:
-            top_left = (420.20435385942, 339.20435385942)
-            bottom_right = (636.95435479, 519.82935479)
+            top_left = sim.drawing_area[0]
+            bottom_right = sim.drawing_area[1]
             all_commands = []
             all_commands.extend(p.move_to(*top_left))
             all_commands.extend(p.move_to(top_left[0], bottom_right[1]))
