@@ -24,42 +24,44 @@ def cmd(ser, cmd):
     print(cmd, result, cmd == result)
 
 def send_commands(commands):
+    chunk_size = 20
+    progress_print_commands = 1000
     with serial.Serial() as ser:
         ser.baudrate = 9600
-        ser.port = 'COM4'  # usb
+        # ser.port = 'COM4'  # usb
         # ser.port = 'COM5'  # bluetooth
+        ser.port = '/dev/ttyACM0' # raspberry
         ser.timeout = None
         ser.open()
-        # ser.flush()
-        # result = ser.read_until()
-        # if not result == b'Ready\r\n':
-        #     print('incorrect handshake')
-        #     print(result)
-        #     sys.exit()
-        # else:
-        #     print('ready to go')
         
-        start = time.time()
         establish_contact(ser)
-        print(f'contact {time.time() - start:.3f}')
-        
-        for chunk in chunks(commands, 20):
+        start = time.time()
+        # start_time = time.strftime('%H:%M:%S', time.localtime(start))
+        total_commands = len(commands)
+        commands_sent = 0
+        temp = -1
+        for chunk in chunks(commands, chunk_size):
             for c in chunk:
                 ser.write(c.encode())
-                # ser.flush()
-                # cmd(ser, c)
-            # print(ser.readlines())
-            # print(ser.read_until())
             
+            # print progress and end time estimate
+            commands_sent += chunk_size
+            # only print every <progress_print_commands> commands
+            if temp < commands_sent // progress_print_commands:
+                temp = commands_sent // progress_print_commands
+                progress = commands_sent * 1.0 / total_commands
+                elapsed_time = time.time() - start
+                # time_per_command = elapsed_time / commands_sent()
+                total_time_estimate = elapsed_time / progress
+                time_left = total_time_estimate - elapsed_time
+                end_time_estimate = time.strftime('%H:%M:%S', time.localtime(start + total_time_estimate))
+                # print(f'{time.strftime("%H:%M:%S")}: {commands_sent} {progress:.2%} {time_left:.0f}s left --- end time {end_time_estimate}')      
+                print('{}: {} {:.2%} {:.0f}s left --- {}'.format(time.strftime("%H:%M:%S"), commands_sent, progress, time_left, end_time_estimate))         
+            
+            # wait for the plotter to clear the serial buffer
             while ser.in_waiting <= 0:
                 pass
-            result = ser.read(ser.in_waiting)
-            print(f'{time.time() - start:.3f}', result)            
-                
-        # print(ser.read())
-        # ser.flush()
-        # result = ser.read()
-        # print(result)
+            ser.read(ser.in_waiting)
                                
 def establish_contact(ser):
     while ser.in_waiting <= 0:
@@ -71,8 +73,8 @@ def establish_contact(ser):
     
         
 if __name__ == '__main__':
-    knightrider = ['a', 'b', 'c', 'd']
-    knightrider.extend(reversed(knightrider[1:-1]))
+    # knightrider = ['a', 'b', 'c', 'd']
+    # knightrider.extend(reversed(knightrider[1:-1]))
     # knightrider = itertools.cycle(knightrider)
     
     send_commands(['d'] * 2500 + ['x'])
