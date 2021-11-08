@@ -47,8 +47,9 @@ void setup() {
   penUp();
 
   // Serial.println("Ready");
-  Serial.write('A');
-  Serial.flush();
+  //Serial.write('A');
+  //Serial.flush();
+  establishContact();
 }
 
 void rotate(int motor, int dir, int steps) {
@@ -62,9 +63,9 @@ void rotate(int motor, int dir, int steps) {
   for (int i = 0; i < steps; i++) {
     // These four lines result in 1 step:
     digitalWrite(pins[motor][STEP_PIN], HIGH);
-    delayMicroseconds(500);
+    delayMicroseconds(250);
     digitalWrite(pins[motor][STEP_PIN], LOW);
-    delayMicroseconds(500);
+    delayMicroseconds(250);
   }
 }
 
@@ -83,6 +84,13 @@ void penUp() {
   delay(PEN_DELAY);
 }
 
+void establishContact() {
+  while (Serial.available() <= 0) {
+    Serial.print('A');
+    delay(300);
+  }  
+}
+
 char c;
 
 void loop() {
@@ -95,8 +103,13 @@ void loop() {
       case 'd': rotate(MOTOR_RIGHT, DIRECTION_RIGHT, 1); break;
       case 'e': penUp(); break;
       case 'f': penDown(); break;
+      case 'x': 
+        rotate(MOTOR_RIGHT, DIRECTION_LEFT, 2500); 
+        break; 
     }
-    Serial.write(c);
-    Serial.flush();
+  } else {
+    Serial.print('B');
+    //delay(1);
+    delayMicroseconds(500);
   }
 }

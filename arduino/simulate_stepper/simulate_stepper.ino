@@ -31,9 +31,10 @@ void setup() {
   pinMode(penPin, OUTPUT);
   penUp();
 
-  // Serial.println("Ready");
-  Serial.write('A');
-  Serial.flush();
+  //Serial.println("Ready");
+  //Serial.write('A');
+  //Serial.flush();
+  establishContact();
 }
 
 void blink_all() { 
@@ -51,7 +52,7 @@ void blink_all() {
 
 void blink(int pin) { 
   digitalWrite(pin, HIGH);    
-  delay(5);                 
+  delay(25);                 
   digitalWrite(pin, LOW);     
 }
   
@@ -88,6 +89,13 @@ void penUp() {
   delay(500);
 }
 
+void establishContact() {
+  while (Serial.available() <= 0) {
+    Serial.print('A');
+    delay(300);
+  }  
+}
+
 char c;
 // String s;
 
@@ -103,8 +111,6 @@ void loop() {
 //  rotate(MOTOR_RIGHT, DIRECTION_LEFT);
 //  rotate(MOTOR_RIGHT, DIRECTION_RIGHT);    
 //  delay(1000);     
-
-  if (Serial.available() > 0) {
 //    blink_all();
 //    s = Serial.readString();
 //    s.trim();
@@ -126,6 +132,7 @@ void loop() {
 //    Serial.flush();
 
 //    blink_all();
+  if (Serial.available() > 0) {
     c = Serial.read();
     switch (c) {
       case 'a': rotate(MOTOR_LEFT, DIRECTION_LEFT); break;
@@ -135,7 +142,8 @@ void loop() {
       case 'e': penUp(); break;
       case 'f': penDown(); break;
     }
-    Serial.write(c);
-    Serial.flush();
+  } else {
+    Serial.print('B');
+    delay(10);
   }
 }
