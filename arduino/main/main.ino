@@ -15,7 +15,7 @@
 #define STEP_PIN 1
 
 #define PEN_PIN 12
-#define PEN_POS_UP 100 // in degree
+#define PEN_POS_UP 150 // in degree
 #define PEN_POS_DOWN 80 // in degree
 #define PEN_STEP_SIZE 1 // in degree
 #define PEN_DELAY 100 // in ms
@@ -88,7 +88,7 @@ void rotate(int motor, int dir, int steps) {
 }
 
 void penDown() {         
-  delay(PEN_DELAY);        
+  delay(PEN_DELAY / 4);        
   for (pos = PEN_POS_UP; pos >= PEN_POS_DOWN; pos -= PEN_STEP_SIZE) {
     pen_servo.write(pos);              
     delay(PEN_STEP_DELAY );                       
@@ -97,7 +97,7 @@ void penDown() {
 }
 
 void penUp() {         
-  delay(PEN_DELAY);        
+  // delay(PEN_DELAY);        
   pen_servo.write(PEN_POS_UP);           
   delay(PEN_DELAY);
 }
