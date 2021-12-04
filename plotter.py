@@ -387,7 +387,7 @@ if __name__ == '__main__':
     send_commands = arduino_serial.send_commands
     
     sim = simulation.Simulation()
-    # send_commands = sim.send_commands
+    send_commands = sim.send_commands
     
     # def send_commands(commands):
     #     sim.send_commands(commands)
@@ -509,9 +509,13 @@ if __name__ == '__main__':
             # p.translate = [420, 348]
             # p.scale = [0.150, 0.150]
             
-            filename = 'hatching_20210530_120448_789236'
-            p.translate = [420, 409 - 70]
-            p.scale = [0.289, 0.289]
+            # filename = 'hatching_20210530_120448_789236'
+            # p.translate = [420, 409 - 70]
+            # p.scale = [0.289, 0.289]
+            
+            filename = 'vpype'
+            p.translate = [375, 295]
+            # p.scale = [1.000, 1.000]
             
             # filename = 'boob'
             # # p.translate = [430, 450]
@@ -651,14 +655,16 @@ if __name__ == '__main__':
         all_commands.extend(p.move_to(bottom_right[0], top_left[1]))
         all_commands.extend(p.move_to(*bottom_right))
         all_commands.extend(p.move_to(*p.home))
-      
-    # print(len(all_commands))
-    # send_commands(all_commands)
     
     # write commands
     if True:        
         with open(f'plot_commands_{filename}.txt', 'w') as f:
             f.write(''.join(all_commands))  
+            
+    # generate simulation
+    print(len(all_commands))
+    sim.send_commands(all_commands)
+    print('commands written')
         
     # commands analysis
     if True:
