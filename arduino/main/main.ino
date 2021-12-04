@@ -31,6 +31,8 @@ int pins[2][2] = { // direction, step
 int penPin = 4;
 int pos = 0;    // variable to store the servo position
 
+int steps_to_home[2] = {0, 0};
+
 void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(BAUDRATE);
@@ -52,13 +54,29 @@ void setup() {
   establishContact();
 }
 
+void setHome() {
+  steps_to_home[MOTOR_LEFT] = 0;
+  steps_to_home[MOTOR_RIGHT] = 0;
+}
+
+void moveHome(int motor) {
+  if (steps_to_home[motor] > 0) {
+    rotate(motor, DIRECTION_LEFT, steps_to_home[motor]);
+  }
+  if (steps_to_home[motor] < 0) {
+    rotate(motor, DIRECTION_RIGHT, -steps_to_home[motor]);
+  }
+}
+  
 void rotate(int motor, int dir, int steps) {
   if (dir == DIRECTION_RIGHT) {
     // Set the spinning direction clockwise:
     digitalWrite(pins[motor][DIRECTION_PIN], HIGH);
+    steps_to_home[motor] += steps;
   } else {
     // Set the spinning direction counter clockwise:
     digitalWrite(pins[motor][DIRECTION_PIN], LOW);
+    steps_to_home[motor] -= steps;
   }
   for (int i = 0; i < steps; i++) {
     // These four lines result in 1 step:
@@ -103,9 +121,8 @@ void loop() {
       case 'd': rotate(MOTOR_RIGHT, DIRECTION_RIGHT, 1); break;
       case 'e': penUp(); break;
       case 'f': penDown(); break;
-      case 'x': 
-        rotate(MOTOR_RIGHT, DIRECTION_LEFT, 2500); 
-        break; 
+      case 's': setHome(); break;
+      case 'h': penUp(); moveHome(MOTOR_RIGHT); moveHome(MOTOR_LEFT); break;
     }
   } else {
     Serial.print('B');
