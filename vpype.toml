@@ -1,0 +1,6 @@
+[gwrite]
+default_profile = "polargraph"
+
+[gwrite.polargraph]
+segment_first = "M {x:.4f} {y:.4f} "
+segment = "L {x:.4f} {y:.4f} "

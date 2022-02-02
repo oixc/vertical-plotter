@@ -1,0 +1,47 @@
+vpype -H -vv read '.\file.svg' linesort -t
+vpype -H -vv read '.\file.svg' gwrite gcode_test.gcode
+vpype -H -vv read '.\file.svg' gwrite --profile gcode gcode_test.gcode
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' gwrite test.path
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' gwrite test.path
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' gwrite test.path
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 gwrite test.path
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite test.path
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite test.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite test.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite test.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 2cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -vv --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 2cm a4 linesort -t -p 1000 linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 2cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.pdf' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite cmyk_1.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite cmyk_2.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite cmyk_3.path stat
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesort -t linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 splitall linesort -t linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 splitall linesort linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify splitall linesort linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify splitall linesort -t -p 10 linemerge gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify splitall linesort -t -p 10 linemerge -t 0.5mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify -t 0.2mm splitall linesort -t -p 10 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify -t 0.1mm splitall linesort -t -p 10 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify splitall linesort -t -p 50 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify linemerge -t 1mm splitall linesort -t -p 100 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify linemerge -t 1mm splitall linesort -t -p 100 linemerge -t 2mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify linemerge -t 1mm splitall linesort -t -p 100 linemerge -t 1mm reloop gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify linemerge -t 1mm splitall linesort -t -p 100 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 3cm a4 linesimplify linemerge -t 1mm splitall linesort -t -p 250 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 1cm a6 linemerge -t 1mm splitall linesort -t -p 250 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 1cm a6 linemerge -t 1mm splitall linesort -p 250 linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 1cm a6 linesimplify linemerge -t 1mm splitall linesort linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 1cm a6 linesimplify linemerge -t 1mm splitall linesort linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
+vpype -H -v --config '.\vpype.toml' read '.\file.svg' rotate 90 layout -l -h center -v center -m 1cm a6 linesimplify linemerge -t 1mm splitall linesort -t linemerge -t 1mm gwrite vpype.path stat write -pu -m path print_preview.svg
