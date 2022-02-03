@@ -5,7 +5,7 @@ Created on Sun Apr  4 16:16:44 2021
 @author: oixc
 """
 
-import arduino_serial
+# import arduino_serial
 import simulation
 import numpy as np
 from util import command_dict
@@ -365,6 +365,8 @@ def create_plotter(simulate=True, anchor_width=1000):
     sim.guesstimate_line_lenth()
     sim.find_home()
     sim.set_home()
+    # sim.drawing_area = [(390 + 15 - 15, 300 + 25), (390 + 297 - 15 - 15, 300 + 420 - 35)]  # A3
+    sim.drawing_area = [(390 + 15 - 15, 300 + 25), (390 + 297 - 15 - 15, 300 + 210 - 35)]  # A4
     sim.find_lower_tension_border(min_tension_threshold=1/3)
     sim.max_line_length = sim.anchor_width * 1.2
     p.anchor_points = sim.anchor_points.copy()
@@ -372,6 +374,7 @@ def create_plotter(simulate=True, anchor_width=1000):
     p.max_line_length = sim.max_line_length
     p.find_home()
     p.set_home()
+    p.drawing_area = sim.drawing_area  
     
     p.translate = [0, 0]
     p.scale = [1, 1]
@@ -384,7 +387,7 @@ def create_plotter(simulate=True, anchor_width=1000):
     
     
 if __name__ == '__main__':    
-    send_commands = arduino_serial.send_commands
+    # send_commands = arduino_serial.send_commands
     
     sim = simulation.Simulation()
     send_commands = sim.send_commands
